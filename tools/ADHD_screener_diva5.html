@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIVA-5 ADHD Screener</title>
+    <style>
+        :root {
+            --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            --font-family-serif: "Georgia", "Times New Roman", serif;
+
+            /* Light Mode (Default) */
+            --primary-color-light: #007bff;
+            --secondary-color-light: #6c757d;
+            --background-color-light: #f8f9fa;
+            --text-color-light: #212529;
+            --card-bg-light: #ffffff;
+            --card-border-light: #dee2e6;
+            --input-bg-light: #fff;
+            --input-border-light: #ced4da;
+            --button-bg-light: #007bff;
+            --button-text-light: #ffffff;
+            --button-hover-bg-light: #0056b3;
+            --link-color-light: #007bff;
+            --progress-bar-bg-light: #e9ecef;
+            --progress-bar-fill-light: #007bff;
+            --toggle-bg-off-light: #ccc;
+            --toggle-bg-on-light: var(--primary-color-light);
+            --toggle-knob-light: white;
+
+            /* Dark Mode */
+            --primary-color-dark: #0d6efd; /* A slightly brighter blue for dark mode */
+            --secondary-color-dark: #adb5bd;
+            --background-color-dark: #1a1a1a; /* Darker background */
+            --text-color-dark: #e0e0e0; /* Lighter text */
+            --card-bg-dark: #2c2c2c; /* Darker card background */
+            --card-border-dark: #444444;
+            --input-bg-dark: #333;
+            --input-border-dark: #555;
+            --button-bg-dark: #0d6efd;
+            --button-text-dark: #ffffff;
+            --button-hover-bg-dark: #0a58ca;
+            --link-color-dark: #3b9dff; /* Brighter link for dark mode */
+            --progress-bar-bg-dark: #444444;
+            --progress-bar-fill-dark: #0d6efd;
+            --toggle-bg-off-dark: #555;
+            --toggle-bg-on-dark: var(--primary-color-dark);
+            --toggle-knob-dark: #ddd;
+        }
+
+        body {
+            font-family: var(--font-family-sans);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.6;
+        }
+
+        body.light-mode {
+            background-color: var(--background-color-light);
+            color: var(--text-color-light);
+        }
+
+        body.dark-mode {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        #app-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode #app-container {
+            background-color: var(--card-bg-light);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border: 1px solid var(--card-border-light);
+        }
+
+        body.dark-mode #app-container {
+            background-color: var(--card-bg-dark);
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            border: 1px solid var(--card-border-dark);
+        }
+
+        .page {
+            display: none; /* Hidden by default, shown by JS */
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+        }
+        body.light-mode h1, body.light-mode h2, body.light-mode h3 { color: var(--primary-color-light); }
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 { color: var(--primary-color-dark); }
+
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        body.light-mode button {
+            background-color: var(--button-bg-light);
+            color: var(--button-text-light);
+        }
+        body.dark-mode button {
+            background-color: var(--button-bg-dark);
+            color: var(--button-text-dark);
+        }
+        body.light-mode button:hover { background-color: var(--button-hover-bg-light); }
+        body.dark-mode button:hover { background-color: var(--button-hover-bg-dark); }
+
+        button.secondary {
+            background-color: var(--secondary-color-light);
+        }
+        body.dark-mode button.secondary {
+            background-color: var(--secondary-color-dark);
+        }
+        body.light-mode button.secondary:hover { background-color: #5a6268; }
+        body.dark-mode button.secondary:hover { background-color: #828a93; }
+
+
+        .settings-controls {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 200px; /* Adjusted to ensure space for label and toggle */
+        }
+        body.light-mode .settings-controls { background-color: rgba(255,255,255,0.8); border: 1px solid var(--card-border-light); }
+        body.dark-mode .settings-controls { background-color: rgba(44,44,44,0.8); border: 1px solid var(--card-border-dark); }
+
+        .settings-controls .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* This aligns label left, switch right */
+            width: 100%; /* Ensures the group uses the full width of .settings-controls */
+        }
+
+        .settings-controls .toggle-label-text {
+            /* margin-right is removed or can be small, space-between handles spacing */
+            font-size: 0.9em;
+            white-space: nowrap; /* Optional: prevents text wrapping */
+        }
+        
+        /* Switch Toggle Styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px; /* Adjusted width */
+            height: 24px; /* Adjusted height */
+            flex-shrink: 0; /* Prevent switch from shrinking */
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 24px; /* Adjusted for new height */
+            transition: .4s;
+        }
+        body.light-mode .slider { background-color: var(--toggle-bg-off-light); }
+        body.dark-mode .slider { background-color: var(--toggle-bg-off-dark); }
+
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; /* Adjusted knob size */
+            width: 18px;  /* Adjusted knob size */
+            left: 3px;   /* Adjusted knob position */
+            bottom: 3px; /* Adjusted knob position */
+            border-radius: 50%;
+            transition: .4s;
+        }
+        body.light-mode .slider:before { background-color: var(--toggle-knob-light); }
+        body.dark-mode .slider:before { background-color: var(--toggle-knob-dark); }
+
+        input:checked + .slider {
+            /* background-color will be set by theme-specific classes */
+        }
+        body.light-mode input:checked + .slider { background-color: var(--toggle-bg-on-light); }
+        body.dark-mode input:checked + .slider { background-color: var(--toggle-bg-on-dark); }
+
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3; /* Optional focus style */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px); /* Adjusted translation */
+        }
+
+
+        #progress-indicator {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        body.light-mode #progress-indicator { background-color: var(--progress-bar-bg-light); }
+        body.dark-mode #progress-indicator { background-color: var(--progress-bar-bg-dark); }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            transition: width 0.3s ease-in-out;
+        }
+        body.light-mode #progress-bar { background-color: var(--progress-bar-fill-light); }
+        body.dark-mode #progress-bar { background-color: var(--progress-bar-fill-dark); }
+        #progress-text {
+            text-align: center;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        body.light-mode #progress-text { color: var(--secondary-color-light); }
+        body.dark-mode #progress-text { color: var(--secondary-color-dark); }
+
+
+        .question-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .examples-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        body.light-mode .examples-group { border: 1px solid var(--input-border-light); background-color: #fdfdfd; }
+        body.dark-mode .examples-group { border: 1px solid var(--input-border-dark); background-color: #333; }
+
+
+        .examples-group h3 {
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        body.light-mode .examples-group h3 { color: var(--primary-color-light); }
+        body.dark-mode .examples-group h3 { color: var(--primary-color-dark); }
+
+        .example-item {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        body.light-mode .example-item { border: 1px solid var(--input-border-light); background-color: var(--input-bg-light); }
+        body.dark-mode .example-item { border: 1px solid var(--input-border-dark); background-color: var(--input-bg-dark); }
+
+        body.light-mode .example-item:hover { background-color: #e9ecef; }
+        body.dark-mode .example-item:hover { background-color: #444; }
+
+        .example-item input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .example-item.selected {
+            font-weight: bold;
+        }
+        body.light-mode .example-item.selected { border-left: 5px solid var(--primary-color-light); background-color: #e0efff; }
+        body.dark-mode .example-item.selected { border-left: 5px solid var(--primary-color-dark); background-color: #3a4a60; }
+
+
+        .radio-group label, .checkbox-group label {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        body.light-mode .radio-group label, body.light-mode .checkbox-group label { border: 1px solid var(--input-border-light); background-color: var(--input-bg-light); }
+        body.dark-mode .radio-group label, body.dark-mode .checkbox-group label { border: 1px solid var(--input-border-dark); background-color: var(--input-bg-dark); }
+
+        body.light-mode .radio-group label:hover, body.light-mode .checkbox-group label:hover { background-color: #e9ecef; }
+        body.dark-mode .radio-group label:hover, body.dark-mode .checkbox-group label:hover { background-color: #444; }
+
+        .radio-group input[type="radio"], .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            width: calc(100% - 18px); /* Full width minus padding and border */
+            max-width: 200px;
+        }
+        body.light-mode input[type="number"], body.light-mode input[type="text"] {
+            border: 1px solid var(--input-border-light);
+            background-color: var(--input-bg-light);
+            color: var(--text-color-light);
+        }
+        body.dark-mode input[type="number"], body.dark-mode input[type="text"] {
+            border: 1px solid var(--input-border-dark);
+            background-color: var(--input-bg-dark);
+            color: var(--text-color-dark);
+        }
+
+
+        .navigation-controls {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #report-area {
+            padding: 20px;
+        }
+        #report-content {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            max-height: 50vh; /* Adjusted for more content */
+            overflow-y: auto;
+        }
+        body.light-mode #report-content { border: 1px solid var(--card-border-light); background-color: #f1f3f5; }
+        body.dark-mode #report-content { border: 1px solid var(--card-border-dark); background-color: #222; }
+
+        .report-section { margin-bottom: 15px; white-space: normal; /* Collapse extra whitespace for the whole section */ }
+        .report-section h3 {
+            font-size: 1.2em;
+            margin-bottom: 3px; /* Reduced from 5px */
+            border-bottom: 1px solid;
+            padding-bottom: 3px; /* Reduced from 5px */
+            white-space: normal; /* Collapse extra whitespace */
+        }
+        body.light-mode .report-section h3 { border-bottom-color: var(--card-border-light); }
+        body.dark-mode .report-section h3 { border-bottom-color: var(--card-border-dark); }
+
+        .report-section p { margin: 5px 0; }
+        .report-section ul { padding-left: 20px; margin: 5px 0; } /* General UL style */
+
+        .report-section ul.diagnosis-list {
+            margin-top: 0px;
+            margin-bottom: 0px;
+            padding-left: 20px;
+            list-style-type: none;
+        }
+        .report-section ul.diagnosis-list li { margin-bottom: 1px; /* Reduced from 2px */ white-space: normal; /* Collapse extra whitespace */ }
+        .report-section ul.diagnosis-list li.indicated { font-weight: bold; }
+        .report-section ul.diagnosis-list li.indicated::before { content: "[X] "; }
+        .report-section ul.diagnosis-list li:not(.indicated)::before { content: "[ ] "; }
+        
+        /* Styles for nested example lists in the report */
+        .report-section ul.diagnosis-list li ul {
+            padding-left: 20px; /* Indent for example list */
+            list-style-type: disc; /* Bullets for examples */
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .report-section ul.diagnosis-list li ul li {
+            font-weight: normal; /* Examples should not be bold unless specifically styled */
+            margin-bottom: 2px;
+        }
+        .report-section ul.diagnosis-list li ul li::before {
+            content: ""; /* Remove the [X] or [ ] from example items */
+        }
+        .report-section ul.diagnosis-list li ul li[style*="list-style-type: none"] { /* For "Adult examples reported:" headers */
+            list-style-type: none !important;
+            margin-left: -20px; /* Counteract parent padding if needed */
+        }
+
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background-color: #fff !important; /* Ensure white background for printing */
+                color: #000 !important; /* Ensure black text for printing */
+                font-family: var(--font-family-serif); /* Serif for better print readability */
+            }
+            #app-container {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+            .settings-controls, .navigation-controls, #progress-indicator, #progress-text, #download-pdf-button, #restart-button-report {
+                display: none !important;
+            }
+            #report-area, #report-content {
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+                background-color: #fff !important;
+                max-height: none !important;
+                overflow-y: visible !important;
+                white-space: normal; /* Allow wrapping for print */
+            }
+            .page { display: none !important; } /* Hide all pages */
+            #report-area.active { display: block !important; } /* Only show report area */
+
+            .example-item.selected {
+                border-left: none !important;
+                background-color: #fff !important;
+                font-weight: normal !important; /* Avoid bolding if it causes issues */
+            }
+            .report-section h3 {
+                color: #000 !important;
+                border-bottom-color: #ccc !important;
+            }
+            .report-section ul.diagnosis-list li.indicated::before { content: "[X] "; color: #000 !important; }
+            .report-section ul.diagnosis-list li:not(.indicated)::before { content: "[ ] "; color: #000 !important; }
+            .report-section ul.diagnosis-list li ul li::before { content: "• "; } /* Ensure bullets for examples in print */
+            .report-section ul.diagnosis-list li ul li[style*="list-style-type: none"]::before { content: "" !important; } /* No bullet for sub-headers */
+
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            #app-container {
+                margin: 10px;
+                padding: 15px;
+            }
+            .page {
+                padding: 10px;
+            }
+            .settings-controls {
+                position: static;
+                /* display: flex; // Already flex from main style */
+                flex-direction: column;
+                align-items: stretch; /* Allow toggle groups to take full width */
+                margin-bottom: 15px;
+                padding: 10px;
+                min-width: unset; /* Remove min-width for mobile */
+            }
+            .settings-controls .toggle-group { 
+                margin-bottom: 8px; 
+                width: 100%; /* Ensure full width on mobile */
+            }
+            button {
+                padding: 12px 15px; /* Larger tap targets */
+                font-size: 1.1em;
+            }
+            .navigation-controls {
+                flex-direction: column;
+            }
+            .navigation-controls button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .navigation-controls button:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+    </style>
+</head>
+<body class="light-mode">
+
+    <div class="settings-controls">
+        <div class="toggle-group">
+            <span class="toggle-label-text">Dark Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="toggle-group" id="simulate-mode-label"> <!-- Keep ID for JS targeting if needed -->
+            <span class="toggle-label-text">Simulate Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="simulate-mode-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <button id="reset-button-global" class="secondary" style="display: none;">Reset Questionnaire</button>
+    </div>
+
+    <div id="app-container">
+        <div id="progress-indicator">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="progress-text">Step 0 of 0</div>
+
+        <!-- Page: Introduction -->
+        <div id="intro-page" class="page">
+            <h1>Welcome to the DIVA-5 ADHD Screener</h1>
+            <p>This tool is designed to help individuals explore symptoms related to Attention-Deficit/Hyperactivity Disorder (ADHD) based on the DIVA-5 (<a href="Diagnostic Interview for ADHD in adults (3rd edition - DIVA-5).pdf">Diagnostic Interview for ADHD in Adults, 3rd edition</a>).</p>
+            <p>The DIVA-5 is a structured diagnostic interview used by clinicians. This screener aims to replicate parts of that process for personal insight. It is <strong>not a diagnostic tool</strong> and cannot replace a professional consultation with a qualified healthcare provider.</p>
+            <p>The screener will ask you about symptoms experienced both in adulthood (currently or within the last 6 months) and during childhood (typically ages 5-12).</p>
+            <p>Please answer thoughtfully and honestly. All information you provide is processed locally in your browser and is not stored or transmitted anywhere.</p>
+            <button id="start-disclaimer-button">Next: Disclaimer</button>
+        </div>
+
+        <!-- Page: Disclaimer -->
+        <div id="disclaimer-page" class="page">
+            <h1>Disclaimer & Privacy</h1>
+            <p><strong>Not a Diagnostic Tool:</strong> This screener is for informational and educational purposes only. It is not intended to provide a medical diagnosis of ADHD or any other condition. A formal diagnosis can only be made by a qualified healthcare professional through a comprehensive clinical evaluation.</p>
+            <p><strong>Privacy:</strong> Your privacy is important. All responses you provide are processed locally within your web browser. No data is sent to any server, stored permanently, or shared with any third parties. When you close this browser tab or window, your session data will be lost unless you download the report.</p>
+            <p><strong>Confidentiality of Report:</strong> At the end of the screener, you will have the option to generate and download a report of your responses and an initial assessment summary. It is your responsibility to manage the confidentiality of this downloaded report.</p>
+            <p><strong>Accuracy of Information:</strong> While this screener is based on the DIVA-5 criteria, the interpretation and application of these criteria in a clinical setting involve professional judgment. The accuracy of the screener's output depends on the accuracy of your self-reporting.</p>
+            <p>By proceeding, you acknowledge that you have read, understood, and agree to this disclaimer.</p>
+            <label>
+                <input type="checkbox" id="disclaimer-confirm"> I have read and understood the disclaimer.
+            </label>
+            <br>
+            <button id="start-questionnaire-button" disabled>Start Questionnaire</button>
+        </div>
+
+        <!-- Page: Questionnaire Area -->
+        <div id="questionnaire-area" class="page">
+            <div id="question-content">
+                <!-- Question text and examples will be rendered here by JS -->
+            </div>
+            <div class="navigation-controls">
+                <button id="prev-question-button" style="display: none;">Previous</button>
+                <button id="next-question-button">Next</button>
+            </div>
+        </div>
+
+        <!-- Page: Report Area -->
+        <div id="report-area" class="page">
+            <h1>Screener Report</h1>
+            <p>This report summarizes your responses and provides an initial assessment based on the DIVA-5 criteria. Remember, this is not a formal diagnosis and a comprehensive clinical evaluation by a qualified healthcare professional is required for an actual diagnosis.</p>
+            <div id="report-content">
+                <!-- Report content will be rendered here by JS -->
+            </div>
+            <button id="download-pdf-button">Download Report as PDF</button>
+            <button id="restart-button-report" class="secondary">Start New Screener</button>
+            <p style="margin-top: 20px; text-align: center;"><em>Discover more widgets at <a href="https://cgee.nz/widgets" target="_blank" rel="noopener noreferrer">Chris Barlow's Widget Workshop!</a></em></p>
+        </div>
+
+    </div>
+
+    <script>
+        // Embedded JavaScript logic
+        const DIVA5_DATA = {
+            introductionText: `This interview will be used to ask about the presence of ADHD symptoms that you experienced during your childhood and adulthood. The questions are based on the official criteria for ADHD in the DSM-5. For each question I will ask you whether you recognise the problem. To help you during the interview I will provide some examples of each symptom, that describe the way that children and adults often experience difficulties related to each of the symptoms of ADHD. First of all, you will be asked the questions, then your partner and family members (if present) will be asked the same questions. Your partner will most likely have known you only since adulthood and will be asked questions about the period of your life that he or she knew you for; your family will have a better idea of your behaviour during childhood. Both stages of your life need to be investigated in order to be able to establish the diagnosis of ADHD.`,
+            disclaimerText: `The DIVA-5 is the third edition of the DIVA. This edition includes adjustments made to the DIVA 2.0 following the changes in the DSM-5 criteria for Attention-deficit/hyperactivity disorder. According to the DSM-5, ascertaining the diagnosis of ADHD in adults involves determining the presence of ADHD symptoms during both childhood and adulthood. The main requirements for the diagnosis are that the onset of ADHD symptoms occurred during childhood and that this was followed by a lifelong persistence of the characteristic symptoms to the time of the current evaluation. The symptoms need to be associated with significant clinical or psychosocial impairments that affect the individual in two or more life situations. Because ADHD in adults is a lifelong condition that starts in childhood, it is necessary to evaluate the symptoms, course and level of associated impairment in childhood, using a retrospective interview for childhood behaviours.`,
+            symptoms: {
+                inattention: [
+                    {
+                        id: "A1",
+                        key: "A1a", // From summary table
+                        questionText: "Do you often fail to give close attention to details, or do you make careless mistakes in your work or during other activities? And how was that during childhood (in schoolwork or during other activities)?",
+                        adultExamples: [
+                            { num: 1, text: "Makes careless mistakes" },
+                            { num: 2, text: "Works slowly to avoid mistakes" },
+                            { num: 3, text: "Work is inaccurate" },
+                            { num: 4, text: "Does not read instructions carefully" },
+                            { num: 5, text: "Overlooks or misses details" },
+                            { num: 6, text: "Too much time needed to complete detailed tasks" },
+                            { num: 7, text: "Gets easily bogged down by details" },
+                            { num: 8, text: "Works too quickly and therefore makes mistakes" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Careless mistakes in schoolwork" },
+                            { num: 2, text: "Mistakes made by not reading questions properly" },
+                            { num: 3, text: "Overlooks or misses details" },
+                            { num: 4, text: "Work is inaccurate" },
+                            { num: 5, text: "Leaves questions unanswered by not reading them properly" },
+                            { num: 6, text: "Leaves the reverse side of a test unanswered" },
+                            { num: 7, text: "Others comment about careless work" },
+                            { num: 8, text: "Not checking the answers in homework" },
+                            { num: 9, text: "Too much time needed to complete detailed tasks" }
+                        ]
+                    },
+                    {
+                        id: "A2",
+                        key: "A1b",
+                        questionText: "Do you often have difficulty sustaining your attention in tasks or play activities? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Difficulty sustaining attention during lectures or lengthy readings" },
+                            { num: 2, text: "Mind wanders easily when trying to concentrate" },
+                            { num: 3, text: "Difficulty staying focused during conversations" },
+                            { num: 4, text: "Easily distracted by irrelevant stimuli" },
+                            { num: 5, text: "Finds it hard to watch a film through to the end or read a book" },
+                            { num: 6, text: "Quickly becomes bored with things" },
+                            { num: 7, text: "Needs a varied and busy schedule to stay focused" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Difficulty staying focused on schoolwork or play activities" },
+                            { num: 2, text: "Mind wanders easily" },
+                            { num: 3, text: "Easily distracted" },
+                            { num: 4, text: "Difficulty concentrating unless it’s something very enjoyable (e.g. computer game)" },
+                            { num: 5, text: "Needs to be told repeatedly to pay attention" },
+                            { num: 6, text: "Quickly becomes bored with activities" }
+                        ]
+                    },
+                    {
+                        id: "A3",
+                        key: "A1c",
+                        questionText: "Do you often not seem to listen when spoken to directly? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Mind seems elsewhere, even in the absence of obvious distraction" },
+                            { num: 2, text: "Accused of not listening" },
+                            { num: 3, text: "Has to ask people to repeat things" },
+                            { num: 4, text: "Difficulty remembering conversations" },
+                            { num: 5, text: "Switches topics in conversation" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Doesn’t seem to listen when spoken to" },
+                            { num: 2, text: "Appears to be daydreaming" },
+                            { num: 3, text: "Needs to be addressed repeatedly" },
+                            { num: 4, text: "Questions have to be repeated" }
+                        ]
+                    },
+                    {
+                        id: "A4",
+                        key: "A1d",
+                        questionText: "Do you often not follow through on instructions and do you fail to finish chores or duties in the workplace? And how was that during childhood (e.g. not finishing schoolwork)?",
+                        adultExamples: [
+                            { num: 1, text: "Starts tasks but quickly loses focus and is easily sidetracked" },
+                            { num: 2, text: "Difficulty completing tasks" },
+                            { num: 3, text: "Difficulty following instructions" },
+                            { num: 4, text: "Leaves projects unfinished" },
+                            { num: 5, text: "Needs structure to finish tasks" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Difficulty following instructions" },
+                            { num: 2, text: "Doesn’t finish tasks or chores" },
+                            { num: 3, text: "Starts tasks but is easily sidetracked" },
+                            { num: 4, text: "Leaves schoolwork or homework unfinished" }
+                        ]
+                    },
+                    {
+                        id: "A5",
+                        key: "A1e",
+                        questionText: "Do you often have difficulty organizing tasks and activities? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Difficulty managing sequential tasks; difficulty keeping materials and belongings in order" },
+                            { num: 2, text: "Messy or disorganized work; poor time management" },
+                            { num: 3, text: "Fails to meet deadlines" },
+                            { num: 4, text: "Difficulty planning ahead" },
+                            { num: 5, text: "Often late" },
+                            { num: 6, text: "Disorganized agenda or workspace" },
+                            { num: 7, text: "Works in a haphazard way" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Difficulty organizing tasks and activities" },
+                            { num: 2, text: "Messy room or desk" },
+                            { num: 3, text: "Difficulty with tasks that require organization (e.g. schoolwork)" },
+                            { num: 4, text: "Poor time management" },
+                            { num: 5, text: "Often late for school or appointments" }
+                        ]
+                    },
+                    {
+                        id: "A6",
+                        key: "A1f",
+                        questionText: "Do you often avoid, dislike, or are you reluctant to engage in tasks that require sustained mental effort? And how was that during childhood (such as schoolwork or homework)?",
+                        adultExamples: [
+                            { num: 1, text: "Avoids tasks that require sustained mental effort (e.g. administrative tasks, filling out forms, reviewing lengthy papers)" },
+                            { num: 2, text: "Procrastinates on tasks that require sustained mental effort" },
+                            { num: 3, text: "Prefers tasks that are less demanding mentally" },
+                            { num: 4, text: "Dislikes or avoids reading long texts" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Avoids or dislikes homework or schoolwork" },
+                            { num: 2, text: "Procrastinates on tasks requiring sustained mental effort" },
+                            { num: 3, text: "Requires frequent breaks during mentally demanding tasks" },
+                            { num: 4, text: "Complains about tasks being boring or too hard" }
+                        ]
+                    },
+                    {
+                        id: "A7",
+                        key: "A1g",
+                        questionText: "Do you often lose things necessary for tasks or activities? And how was that during childhood (e.g. school materials, pencils, books, tools, wallets, keys, paperwork, eyeglasses, mobile telephones)?",
+                        adultExamples: [
+                            { num: 1, text: "Loses things like keys, wallet, phone, paperwork" },
+                            { num: 2, text: "Spends time looking for misplaced items" },
+                            { num: 3, text: "Forgets where things are put" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Loses school materials, pencils, books, toys" },
+                            { num: 2, text: "Forgets belongings at school or friends' houses" },
+                            { num: 3, text: "Loses clothing items" }
+                        ]
+                    },
+                    {
+                        id: "A8",
+                        key: "A1h",
+                        questionText: "Are you often easily distracted by extraneous stimuli? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Easily distracted by sights or sounds" },
+                            { num: 2, text: "Difficulty filtering out irrelevant stimuli" },
+                            { num: 3, text: "Attention easily drawn to unimportant things" },
+                            { num: 4, text: "Difficulty concentrating in noisy environments" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Easily distracted by things happening around them" },
+                            { num: 2, text: "Difficulty staying focused in class due to distractions" },
+                            { num: 3, text: "Pays attention to noises or events that others ignore" }
+                        ]
+                    },
+                    {
+                        id: "A9",
+                        key: "A1i",
+                        questionText: "Are you often forgetful in daily activities? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Forgets appointments or obligations" },
+                            { num: 2, text: "Forgets to do chores or run errands" },
+                            { num: 3, text: "Forgets to return calls or pay bills" },
+                            { num: 4, text: "Needs reminders for daily tasks" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Forgetful in daily activities (e.g. chores)" },
+                            { num: 2, text: "Forgets instructions" },
+                            { num: 3, text: "Needs frequent reminders" }
+                        ]
+                    }
+                ],
+                hyperactivity_impulsivity: [
+                    {
+                        id: "B1",
+                        key: "A2a",
+                        questionText: "Do you often fidget with or tap your hands or feet, or do you squirm in your seat? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Fidgets with hands or feet" },
+                            { num: 2, text: "Taps fingers or feet" },
+                            { num: 3, text: "Squirms in seat" },
+                            { num: 4, text: "Plays with objects (e.g. pen, keys)" },
+                            { num: 5, text: "Difficulty sitting still for long periods" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Fidgets with hands or feet" },
+                            { num: 2, text: "Squirms in seat" },
+                            { num: 3, text: "Cannot sit still" },
+                            { num: 4, text: "Often gets up from seat" }
+                        ]
+                    },
+                    {
+                        id: "B2",
+                        key: "A2b",
+                        questionText: "Do you often leave your seat in situations when remaining seated is expected? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Leaves seat during meetings, meals, or other situations where remaining seated is expected" },
+                            { num: 2, text: "Feels restless when required to sit for extended periods" },
+                            { num: 3, text: "Finds excuses to get up and move around" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Leaves seat in classroom or other situations where remaining seated is expected" },
+                            { num: 2, text: "Gets up during meals or while watching TV" },
+                            { num: 3, text: "Has difficulty staying seated" }
+                        ]
+                    },
+                    {
+                        id: "B3",
+                        key: "A2c",
+                        questionText: "Do you often feel restless? And how was that during childhood (e.g. running about or climbing in situations where it is inappropriate)?",
+                        adultExamples: [
+                            { num: 1, text: "Feels restless internally" },
+                            { num: 2, text: "Feels 'driven by a motor'" },
+                            { num: 3, text: "Has difficulty relaxing or unwinding" },
+                            { num: 4, text: "Always on the go" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Runs about or climbs excessively in inappropriate situations" },
+                            { num: 2, text: "Always on the go, as if 'driven by a motor'" },
+                            { num: 3, text: "Has difficulty playing or engaging in activities quietly" },
+                            { num: 4, text: "Excessively noisy during play" }
+                        ]
+                    },
+                    {
+                        id: "B4",
+                        key: "A2d",
+                        questionText: "Are you often unable to engage in leisure activities quietly? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Difficulty engaging in quiet leisure activities (e.g. reading, hobbies)" },
+                            { num: 2, text: "Prefers active or stimulating activities" },
+                            { num: 3, text: "Becomes easily bored with quiet activities" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Unable to play or engage in leisure activities quietly" },
+                            { num: 2, text: "Makes excessive noise during play" },
+                            { num: 3, text: "Disturbs others with noisy activities" }
+                        ]
+                    },
+                    {
+                        id: "B5",
+                        key: "A2e",
+                        questionText: "Are you often 'on the go', acting as if 'driven by a motor'? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Always busy and active" },
+                            { num: 2, text: "Has difficulty sitting still for extended periods (e.g. in restaurants, meetings)" },
+                            { num: 3, text: "Others may comment on being restless or hard to keep up with" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Always on the go, as if 'driven by a motor'" },
+                            { num: 2, text: "Has difficulty sitting still" },
+                            { num: 3, text: "Seems to have boundless energy" }
+                        ]
+                    },
+                    {
+                        id: "B6",
+                        key: "A2f",
+                        questionText: "Do you often talk excessively? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Talks excessively" },
+                            { num: 2, text: "Dominates conversations" },
+                            { num: 3, text: "Difficulty letting others speak" },
+                            { num: 4, text: "Talks even when it's inappropriate" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Talks excessively" },
+                            { num: 2, text: "Interrupts others' conversations" },
+                            { num: 3, text: "Has difficulty waiting for their turn to speak" }
+                        ]
+                    },
+                    {
+                        id: "B7",
+                        key: "A2g",
+                        questionText: "Do you often blurt out an answer before a question has been completed? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Blurts out answers before questions are completed" },
+                            { num: 2, text: "Completes people's sentences" },
+                            { num: 3, text: "Has difficulty waiting for their turn in conversation" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Blurts out answers before questions are completed" },
+                            { num: 2, text: "Has difficulty waiting for their turn to speak in class" },
+                            { num: 3, text: "Interrupts or intrudes on others" }
+                        ]
+                    },
+                    {
+                        id: "B8",
+                        key: "A2h",
+                        questionText: "Do you often have difficulty waiting your turn? And how was that during childhood?",
+                        adultExamples: [
+                            { num: 1, text: "Difficulty waiting in line or for their turn in activities" },
+                            { num: 2, text: "Impatient" },
+                            { num: 3, text: "May cut in line or take over others' turns" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Has difficulty waiting for their turn in games or group situations" },
+                            { num: 2, text: "Impatient when waiting in line" }
+                        ]
+                    },
+                    {
+                        id: "B9",
+                        key: "A2i",
+                        questionText: "Do you often interrupt or intrude on others? And how was that during childhood (e.g. butts into conversations or games)?",
+                        adultExamples: [
+                            { num: 1, text: "Interrupts conversations or activities" },
+                            { num: 2, text: "Intrudes on others' personal space or belongings" },
+                            { num: 3, text: "May start using other people's things without asking" },
+                            { num: 4, text: "Takes over what others are doing" }
+                        ],
+                        childExamples: [
+                            { num: 1, text: "Interrupts or intrudes on others (e.g. butts into conversations, games)" },
+                            { num: 2, text: "Has difficulty respecting others' boundaries" },
+                            { num: 3, text: "May take toys or belongings from others without asking" }
+                        ]
+                    }
+                ]
+            },
+            criteria: {
+                childhoodOnset: "Were several inattentive or hyperactive-impulsive symptoms present prior to age 12 years?",
+                crossContextualImpairment: "Are the symptoms present in two or more settings (e.g. at home, school, or work; with friends or relatives; in other activities)?",
+                significantImpairment: "Is there clear evidence that the symptoms interfere with, or reduce the quality of, social, academic, or occupational functioning?",
+                exclusionaryCriteria: "Do the symptoms occur exclusively during the course of a schizophrenic or other psychotic disorder and are not better explained by another mental disorder (e.g. mood disorder, anxiety disorder, dissociative disorder, personality disorder, substance intoxication or withdrawal)?"
+            },
+            diagnosisSummary: {
+                inattentionThresholdAdult: 5,
+                hyperactivityImpulsivityThresholdAdult: 5,
+                inattentionThresholdChild: 6,
+                hyperactivityImpulsivityThresholdChild: 6,
+                combinedPresentationText: "Combined Presentation: If both Criterion A1 (inattention) and Criterion A2 (hyperactivity-impulsivity) are met for the past 6 months.",
+                predominantlyInattentivePresentationText: "Predominantly Inattentive Presentation: If Criterion A1 (inattention) is met but Criterion A2 (hyperactivity-impulsivity) is not met for the past 6 months.",
+                predominantlyHyperactiveImpulsivePresentationText: "Predominantly Hyperactive/Impulsive Presentation: If Criterion A2 (hyperactivity-impulsivity) is met and Criterion A1 (inattention) is not met for the past 6 months."
+            }
+        };
+
+        const appState = {
+            currentPage: 'intro-page', // 'intro-page', 'disclaimer-page', 'questionnaire-area', 'report-area'
+            currentQuestionIndex: 0,
+            totalQuestions: 0,
+            responses: {}, // { symptomId: { adult: { count: 0, examples: [] }, child: { count: 0, examples: [] } } }
+            criteriaResponses: {}, // { criteriaKey: boolean }
+            simulateMode: false,
+            theme: 'light-mode' // 'light-mode' or 'dark-mode'
+        };
+
+        // DOM Elements
+        const pages = {};
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const themeToggle = document.getElementById('theme-toggle');
+        const simulateModeToggle = document.getElementById('simulate-mode-toggle');
+        const simulateModeLabel = document.getElementById('simulate-mode-label');
+        const resetButtonGlobal = document.getElementById('reset-button-global');
+
+        function getSelectedExampleTexts(selectedNumbers, allExamplesList) {
+            if (!allExamplesList || !Array.isArray(allExamplesList) || !selectedNumbers || selectedNumbers.length === 0) {
+                return [];
+            }
+            // Sort the selected numbers numerically before mapping
+            const sortedSelectedNumbers = [...selectedNumbers].sort((a, b) => a - b);
+
+            return sortedSelectedNumbers.map(num => {
+                const example = allExamplesList.find(ex => ex.num === num);
+                return example ? `${example.num} - ${example.text}` : `(Example #${num} not found)`;
+            }).filter(text => text);
+        }
+
+
+        function initializeScreener() {
+            pages['intro-page'] = document.getElementById('intro-page');
+            pages['disclaimer-page'] = document.getElementById('disclaimer-page');
+            pages['questionnaire-area'] = document.getElementById('questionnaire-area');
+            pages['report-area'] = document.getElementById('report-area');
+
+            document.getElementById('start-disclaimer-button').addEventListener('click', () => navigateToPage('disclaimer-page'));
+            
+            const disclaimerConfirmCheckbox = document.getElementById('disclaimer-confirm');
+            const startQuestionnaireButton = document.getElementById('start-questionnaire-button');
+
+            disclaimerConfirmCheckbox.addEventListener('change', () => {
+                startQuestionnaireButton.disabled = !disclaimerConfirmCheckbox.checked;
+            });
+
+            startQuestionnaireButton.addEventListener('click', () => {
+                if (disclaimerConfirmCheckbox.checked) {
+                    resetQuestionnaireState(); 
+                    appState.totalQuestions = DIVA5_DATA.symptoms.inattention.length + DIVA5_DATA.symptoms.hyperactivity_impulsivity.length + Object.keys(DIVA5_DATA.criteria).length;
+
+                    if (appState.simulateMode) {
+                        runFullSimulationAndShowReport();
+                    } else {
+                        navigateToPage('questionnaire-area');
+                        renderQuestion();
+                    }
+                }
+            });
+
+            document.getElementById('prev-question-button').addEventListener('click', navigateQuestionnaire);
+            document.getElementById('next-question-button').addEventListener('click', navigateQuestionnaire);
+            document.getElementById('download-pdf-button').addEventListener('click', downloadReportAsPDF);
+            document.getElementById('restart-button-report').addEventListener('click', () => navigateToPage('intro-page'));
+            resetButtonGlobal.addEventListener('click', () => {
+                if (confirm("Are you sure you want to reset the entire questionnaire? All progress will be lost.")) {
+                    resetQuestionnaireState();
+                    navigateToPage('intro-page'); 
+                }
+            });
+
+
+            themeToggle.addEventListener('change', toggleTheme);
+            simulateModeToggle.addEventListener('change', toggleSimulateMode);
+
+            const savedTheme = localStorage.getItem('diva5_theme');
+            if (savedTheme) {
+                appState.theme = savedTheme;
+                document.body.className = appState.theme;
+                themeToggle.checked = (appState.theme === 'dark-mode');
+            }
+            const savedSimulateMode = localStorage.getItem('diva5_simulate_mode');
+            if (savedSimulateMode) {
+                appState.simulateMode = savedSimulateMode === 'true';
+                simulateModeToggle.checked = appState.simulateMode;
+            }
+            updateSimulateModeVisibility();
+
+
+            updateProgressBar();
+            navigateToPage(appState.currentPage); 
+        }
+        
+        function runFullSimulationAndShowReport() {
+            
+            function getRandomSubarray(arr, maxSize) {
+                const shuffled = [...arr].sort(() => 0.5 - Math.random()); 
+                const size = Math.floor(Math.random() * (Math.min(maxSize, shuffled.length) + 1)); 
+                return shuffled.slice(0, size).map(ex => ex.num);
+            }
+
+            const allSymptomGroups = [DIVA5_DATA.symptoms.inattention, DIVA5_DATA.symptoms.hyperactivity_impulsivity];
+
+            allSymptomGroups.forEach(symptomGroup => {
+                symptomGroup.forEach(symptom => {
+                    if (!appState.responses[symptom.id]) {
+                        appState.responses[symptom.id] = { adult: { count: 0, examples: [] }, child: { count: 0, examples: [] } };
+                    }
+
+                    if (symptom.adultExamples && symptom.adultExamples.length > 0) {
+                        if (Math.random() < 0.7) { 
+                            const selectedAdultExamples = getRandomSubarray(symptom.adultExamples, 3); 
+                            appState.responses[symptom.id].adult.examples = selectedAdultExamples;
+                            appState.responses[symptom.id].adult.count = selectedAdultExamples.length;
+                        } else {
+                            appState.responses[symptom.id].adult.examples = [];
+                            appState.responses[symptom.id].adult.count = 0;
+                        }
+                    } else {
+                        appState.responses[symptom.id].adult.examples = [];
+                        appState.responses[symptom.id].adult.count = 0;
+                    }
+
+                    if (symptom.childExamples && symptom.childExamples.length > 0) {
+                         if (Math.random() < 0.7) { 
+                            const selectedChildExamples = getRandomSubarray(symptom.childExamples, 3); 
+                            appState.responses[symptom.id].child.examples = selectedChildExamples;
+                            appState.responses[symptom.id].child.count = selectedChildExamples.length;
+                        } else {
+                            appState.responses[symptom.id].child.examples = [];
+                            appState.responses[symptom.id].child.count = 0;
+                        }
+                    } else {
+                        appState.responses[symptom.id].child.examples = [];
+                        appState.responses[symptom.id].child.count = 0;
+                    }
+                });
+            });
+            
+            Object.keys(DIVA5_DATA.criteria).forEach(criteriaKey => {
+                appState.criteriaResponses[criteriaKey] = Math.random() < 0.6; 
+            });
+            appState.criteriaResponses['exclusionaryCriteria'] = !(Math.random() < 0.6);
+
+
+            appState.currentQuestionIndex = appState.totalQuestions; 
+            
+            navigateToPage('report-area');
+        }
+
+
+        function resetQuestionnaireState() {
+            appState.currentQuestionIndex = 0;
+            appState.responses = {};
+            appState.criteriaResponses = {};
+            updateProgressBar();
+            document.getElementById('disclaimer-confirm').checked = false;
+            document.getElementById('start-questionnaire-button').disabled = true;
+            resetButtonGlobal.style.display = 'none';
+        }
+
+
+        function navigateToPage(pageId) {
+            appState.currentPage = pageId;
+            for (const id in pages) {
+                pages[id].classList.remove('active');
+            }
+            if (pages[pageId]) {
+                pages[pageId].classList.add('active');
+            }
+
+            if (pageId === 'report-area') {
+                renderReport(); 
+                resetButtonGlobal.style.display = 'inline-block';
+            } else if (pageId === 'questionnaire-area') {
+                 resetButtonGlobal.style.display = 'inline-block';
+            } else {
+                resetButtonGlobal.style.display = 'none';
+            }
+            window.scrollTo(0, 0); 
+        }
+
+        function toggleTheme() {
+            appState.theme = themeToggle.checked ? 'dark-mode' : 'light-mode';
+            document.body.className = appState.theme;
+            localStorage.setItem('diva5_theme', appState.theme);
+        }
+
+        function toggleSimulateMode() {
+            appState.simulateMode = simulateModeToggle.checked;
+            localStorage.setItem('diva5_simulate_mode', appState.simulateMode);
+        }
+        
+        function updateSimulateModeVisibility() {
+            // Placeholder
+        }
+
+
+        function renderQuestion() {
+            const questionContent = document.getElementById('question-content');
+            questionContent.innerHTML = ''; 
+
+            const allSymptoms = [...DIVA5_DATA.symptoms.inattention, ...DIVA5_DATA.symptoms.hyperactivity_impulsivity];
+            const criteriaKeys = Object.keys(DIVA5_DATA.criteria);
+
+            let currentItem;
+            let itemType; 
+
+            if (appState.currentQuestionIndex < allSymptoms.length) {
+                currentItem = allSymptoms[appState.currentQuestionIndex];
+                itemType = 'symptom';
+            } else if (appState.currentQuestionIndex < allSymptoms.length + criteriaKeys.length) {
+                const criteriaIndex = appState.currentQuestionIndex - allSymptoms.length;
+                const criteriaKey = criteriaKeys[criteriaIndex];
+                currentItem = { id: criteriaKey, questionText: DIVA5_DATA.criteria[criteriaKey] };
+                itemType = 'criteria';
+            } else {
+                navigateToPage('report-area');
+                return;
+            }
+
+            const title = document.createElement('h2');
+            title.className = 'question-title';
+            if (itemType === 'symptom') {
+                title.textContent = `Symptom ${appState.currentQuestionIndex + 1} of ${allSymptoms.length}: ${currentItem.id}`;
+            } else {
+                 const criteriaDisplayIndex = appState.currentQuestionIndex - allSymptoms.length + 1;
+                title.textContent = `Criterion Question ${criteriaDisplayIndex} of ${criteriaKeys.length}`;
+            }
+            questionContent.appendChild(title);
+
+            const questionTextP = document.createElement('p');
+            questionTextP.className = 'question-text';
+            questionTextP.textContent = currentItem.questionText;
+            questionContent.appendChild(questionTextP);
+
+            if (itemType === 'symptom') {
+                questionContent.appendChild(createExampleGroup(currentItem, 'adult', 'Adulthood (Current or last 6 months)'));
+                questionContent.appendChild(createExampleGroup(currentItem, 'child', 'Childhood (Ages 5-12)'));
+            } else { 
+                const radioGroup = document.createElement('div');
+                radioGroup.className = 'radio-group';
+                const criteriaKey = currentItem.id;
+
+                ['Yes', 'No'].forEach(option => {
+                    const label = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = criteriaKey;
+                    radio.value = option.toLowerCase();
+                    radio.checked = appState.criteriaResponses[criteriaKey] === (option.toLowerCase() === 'yes');
+                    
+                    radio.addEventListener('change', (e) => {
+                        appState.criteriaResponses[criteriaKey] = e.target.value === 'yes';
+                    });
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(option));
+                    radioGroup.appendChild(label);
+                });
+                questionContent.appendChild(radioGroup);
+            }
+
+            updateNavigationButtons();
+            updateProgressBar();
+        }
+
+        function createExampleGroup(symptom, ageGroupKey, titleText) {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'examples-group';
+
+            const title = document.createElement('h3');
+            title.textContent = titleText;
+            groupDiv.appendChild(title);
+
+            const examples = ageGroupKey === 'adult' ? symptom.adultExamples : symptom.childExamples;
+            if (!appState.responses[symptom.id]) {
+                appState.responses[symptom.id] = { adult: { count: 0, examples: [] }, child: { count: 0, examples: [] } };
+            }
+            const currentResponseGroup = appState.responses[symptom.id][ageGroupKey];
+
+            examples.forEach(example => {
+                const label = document.createElement('label');
+                label.className = 'example-item';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = example.num;
+                checkbox.checked = currentResponseGroup.examples.includes(example.num);
+
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        if (!currentResponseGroup.examples.includes(example.num)) {
+                            currentResponseGroup.examples.push(example.num);
+                        }
+                        label.classList.add('selected');
+                    } else {
+                        currentResponseGroup.examples = currentResponseGroup.examples.filter(exNum => exNum !== example.num);
+                        label.classList.remove('selected');
+                    }
+                    currentResponseGroup.count = currentResponseGroup.examples.length;
+                });
+
+                if (checkbox.checked) label.classList.add('selected');
+
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(example.text));
+                groupDiv.appendChild(label);
+            });
+            return groupDiv;
+        }
+
+
+        function navigateQuestionnaire(event) {
+            const direction = event.target.id === 'next-question-button' ? 1 : -1;
+            const allSymptomsLength = DIVA5_DATA.symptoms.inattention.length + DIVA5_DATA.symptoms.hyperactivity_impulsivity.length;
+
+            if (appState.currentQuestionIndex >= allSymptomsLength && appState.currentQuestionIndex < appState.totalQuestions) {
+                const criteriaIndex = appState.currentQuestionIndex - allSymptomsLength;
+                const criteriaKey = Object.keys(DIVA5_DATA.criteria)[criteriaIndex];
+                const radioButtons = document.querySelectorAll(`input[name="${criteriaKey}"]`);
+                radioButtons.forEach(radio => {
+                    if (radio.checked) {
+                        appState.criteriaResponses[criteriaKey] = radio.value === 'yes';
+                    }
+                });
+            }
+
+
+            appState.currentQuestionIndex += direction;
+
+            if (appState.currentQuestionIndex < 0) {
+                appState.currentQuestionIndex = 0; 
+            } else if (appState.currentQuestionIndex >= appState.totalQuestions) {
+                navigateToPage('report-area');
+            } else {
+                renderQuestion();
+            }
+        }
+
+        function updateNavigationButtons() {
+            const prevButton = document.getElementById('prev-question-button');
+            const nextButton = document.getElementById('next-question-button');
+
+            prevButton.style.display = appState.currentQuestionIndex > 0 ? 'inline-block' : 'none';
+            nextButton.textContent = (appState.currentQuestionIndex === appState.totalQuestions - 1) ? 'View Report' : 'Next';
+        }
+
+        function updateProgressBar() {
+            const progress = appState.totalQuestions > 0 ? (appState.currentQuestionIndex / appState.totalQuestions) * 100 : 0;
+            progressBar.style.width = `${progress}%`;
+            
+            if (appState.currentPage === 'report-area') {
+                progressText.textContent = `Report Generated (Completed ${appState.totalQuestions} steps)`;
+                progressBar.style.width = `100%`; 
+            } else {
+                progressText.textContent = `Step ${appState.currentQuestionIndex} of ${appState.totalQuestions}`;
+            }
+        }
+
+        function calculateScores() {
+            const scores = {
+                inattention: { adult: 0, child: 0 },
+                hyperactivity_impulsivity: { adult: 0, child: 0 }
+            };
+            const symptomThreshold = 1; 
+
+            DIVA5_DATA.symptoms.inattention.forEach(symptom => {
+                if (appState.responses[symptom.id]) {
+                    if (appState.responses[symptom.id].adult.count >= symptomThreshold) scores.inattention.adult++;
+                    if (appState.responses[symptom.id].child.count >= symptomThreshold) scores.inattention.child++;
+                }
+            });
+            DIVA5_DATA.symptoms.hyperactivity_impulsivity.forEach(symptom => {
+                if (appState.responses[symptom.id]) {
+                    if (appState.responses[symptom.id].adult.count >= symptomThreshold) scores.hyperactivity_impulsivity.adult++;
+                    if (appState.responses[symptom.id].child.count >= symptomThreshold) scores.hyperactivity_impulsivity.child++;
+                }
+            });
+            return scores;
+        }
+
+        function generateDiagnosisText(scores) {
+            let diagnosisText = "";
+            const summary = DIVA5_DATA.diagnosisSummary;
+
+            const meetsInattentionAdult = scores.inattention.adult >= summary.inattentionThresholdAdult;
+            const meetsHyperactivityAdult = scores.hyperactivity_impulsivity.adult >= summary.hyperactivityImpulsivityThresholdAdult;
+            const meetsInattentionChild = scores.inattention.child >= summary.inattentionThresholdChild;
+            const meetsHyperactivityChild = scores.hyperactivity_impulsivity.child >= summary.hyperactivityImpulsivityThresholdChild;
+
+            diagnosisText += `<strong>Adult Symptom Criteria (Past 6 Months):</strong>\n`;
+            diagnosisText += `  - Inattention Symptoms: ${scores.inattention.adult} (Threshold: ${summary.inattentionThresholdAdult}) - ${meetsInattentionAdult ? "Met" : "Not Met"}\n`;
+            diagnosisText += `  - Hyperactivity/Impulsivity Symptoms: ${scores.hyperactivity_impulsivity.adult} (Threshold: ${summary.hyperactivityImpulsivityThresholdAdult}) - ${meetsHyperactivityAdult ? "Met" : "Not Met"}\n\n`;
+
+            diagnosisText += `<strong>Childhood Symptom Criteria (Ages 5-12, Retrospective):</strong>\n`;
+            diagnosisText += `  - Inattention Symptoms: ${scores.inattention.child} (Threshold: ${summary.inattentionThresholdChild}) - ${meetsInattentionChild ? "Met" : "Not Met"}\n`;
+            diagnosisText += `  - Hyperactivity/Impulsivity Symptoms: ${scores.hyperactivity_impulsivity.child} (Threshold: ${summary.hyperactivityImpulsivityThresholdChild}) - ${meetsHyperactivityChild ? "Met" : "Not Met"}\n\n`;
+            
+            let presentation = "No specific presentation indicated based on adult symptoms.";
+            if (meetsInattentionAdult && meetsHyperactivityAdult) {
+                presentation = summary.combinedPresentationText;
+            } else if (meetsInattentionAdult) {
+                presentation = summary.predominantlyInattentivePresentationText;
+            } else if (meetsHyperactivityAdult) {
+                presentation = summary.predominantlyHyperactiveImpulsivePresentationText;
+            }
+            diagnosisText += `<strong>Potential Presentation (Adult):</strong> ${presentation}\n\n`;
+
+            diagnosisText += "<strong>Additional DSM-5 Criteria Assessment:</strong>\n";
+            let allCriteriaMet = true;
+
+            const childhoodOnsetMet = appState.criteriaResponses['childhoodOnset'] === true && (meetsInattentionChild || meetsHyperactivityChild);
+            diagnosisText += `  - Childhood Onset (Symptoms prior to age 12 AND childhood symptom threshold met): ${childhoodOnsetMet ? "Met" : "Not Met"}\n`;
+            if (!childhoodOnsetMet) allCriteriaMet = false;
+            
+            const crossContextualMet = appState.criteriaResponses['crossContextualImpairment'] === true;
+            diagnosisText += `  - Cross-Contextual Impairment (Symptoms in 2+ settings): ${crossContextualMet ? "Met" : "Not Met"}\n`;
+            if (!crossContextualMet) allCriteriaMet = false;
+
+            const significantImpairmentMet = appState.criteriaResponses['significantImpairment'] === true;
+            diagnosisText += `  - Significant Impairment (Interference with functioning): ${significantImpairmentMet ? "Met" : "Not Met"}\n`;
+            if (!significantImpairmentMet) allCriteriaMet = false;
+
+            const exclusionaryMet = appState.criteriaResponses['exclusionaryCriteria'] === false; 
+            diagnosisText += `  - Exclusionary Criteria (Not better explained by another disorder): ${exclusionaryMet ? "Met" : "Not Met"}\n\n`;
+            if (!exclusionaryMet) allCriteriaMet = false;
+
+            if (allCriteriaMet && (meetsInattentionAdult || meetsHyperactivityAdult)) {
+                diagnosisText += "<strong>Overall Indication:</strong> Based on the responses, there are indications that ADHD criteria MAY be met. This requires confirmation by a qualified healthcare professional.\n";
+            } else {
+                diagnosisText += "<strong>Overall Indication:</strong> Based on the responses, ADHD criteria do not appear to be fully met. However, if you have concerns, please consult a qualified healthcare professional.\n";
+            }
+            return diagnosisText;
+        }
+
+
+        function renderReport() {
+            const reportContent = document.getElementById('report-content');
+            reportContent.innerHTML = ''; 
+
+            const scores = calculateScores();
+            const diagnosisText = generateDiagnosisText(scores);
+
+            const introSection = document.createElement('div');
+            introSection.className = 'report-section';
+            const introHeader = document.createElement('h3');
+            introHeader.textContent = 'Screener Overview';
+            introSection.appendChild(introHeader);
+            const introP = document.createElement('p');
+            introP.innerHTML = `This report is based on your self-reported experiences related to ADHD symptoms, using the DIVA-5 framework. Date of report: ${new Date().toLocaleDateString()}`;
+            introSection.appendChild(introP);
+            reportContent.appendChild(introSection);
+
+
+            const symptomsSection = document.createElement('div');
+            symptomsSection.className = 'report-section';
+            const symptomsHeader = document.createElement('h3');
+            symptomsHeader.textContent = 'Symptom Checklist Summary';
+            symptomsSection.appendChild(symptomsHeader);
+
+            const symptomCategories = [
+                { title: 'Part 1: Symptoms of Inattention', symptoms: DIVA5_DATA.symptoms.inattention, scoreAdult: scores.inattention.adult, scoreChild: scores.inattention.child, thresholdAdult: DIVA5_DATA.diagnosisSummary.inattentionThresholdAdult, thresholdChild: DIVA5_DATA.diagnosisSummary.inattentionThresholdChild },
+                { title: 'Part 2: Symptoms of Hyperactivity/Impulsivity', symptoms: DIVA5_DATA.symptoms.hyperactivity_impulsivity, scoreAdult: scores.hyperactivity_impulsivity.adult, scoreChild: scores.hyperactivity_impulsivity.child, thresholdAdult: DIVA5_DATA.diagnosisSummary.hyperactivityImpulsivityThresholdAdult, thresholdChild: DIVA5_DATA.diagnosisSummary.hyperactivityImpulsivityThresholdChild }
+            ];
+
+            symptomCategories.forEach(category => {
+                const categoryTitle = document.createElement('h4');
+                categoryTitle.textContent = category.title;
+                symptomsSection.appendChild(categoryTitle);
+                
+                const adultScoreP = document.createElement('p');
+                adultScoreP.innerHTML = `<strong>Adulthood:</strong> ${category.scoreAdult} symptom(s) reported (Threshold: ${category.thresholdAdult}).`;
+                symptomsSection.appendChild(adultScoreP);
+
+                const childScoreP = document.createElement('p');
+                childScoreP.innerHTML = `<strong>Childhood:</strong> ${category.scoreChild} symptom(s) reported (Threshold: ${category.thresholdChild}).`;
+                symptomsSection.appendChild(childScoreP);
+
+                const ul = document.createElement('ul');
+                ul.className = 'diagnosis-list'; 
+                category.symptoms.forEach(symptom => {
+                    const adultReported = appState.responses[symptom.id] && appState.responses[symptom.id].adult.count > 0;
+                    const childReported = appState.responses[symptom.id] && appState.responses[symptom.id].child.count > 0;
+                    
+                    const li = document.createElement('li');
+                    li.textContent = `${symptom.id} (${symptom.key}): ${symptom.questionText.substring(0, symptom.questionText.indexOf('?') + 1)} (Adult: ${adultReported ? 'Yes' : 'No'}, Child: ${childReported ? 'Yes' : 'No'})`;
+                    if (adultReported || childReported) { 
+                        li.classList.add('indicated');
+                    }
+                    ul.appendChild(li);
+
+                    // Display selected examples text
+                    const adultSelectedExampleNumbers = appState.responses[symptom.id]?.adult.examples || [];
+                    const childSelectedExampleNumbers = appState.responses[symptom.id]?.child.examples || [];
+
+                    if (adultSelectedExampleNumbers.length > 0 || childSelectedExampleNumbers.length > 0) {
+                        const examplesContainerUl = document.createElement('ul');
+                        // examplesContainerUl.style.paddingLeft = '20px'; // CSS handles this now
+                        // examplesContainerUl.style.listStyleType = 'disc'; // CSS handles this now
+
+                        if (adultSelectedExampleNumbers.length > 0) {
+                            const adultTitleLi = document.createElement('li');
+                            adultTitleLi.innerHTML = `<em>Adult examples reported:</em>`;
+                            adultTitleLi.style.listStyleType = 'none'; 
+                            examplesContainerUl.appendChild(adultTitleLi);
+
+                            const adultExampleTexts = getSelectedExampleTexts(adultSelectedExampleNumbers, symptom.adultExamples);
+                            adultExampleTexts.forEach(text => {
+                                const exampleLi = document.createElement('li');
+                                exampleLi.textContent = text;
+                                examplesContainerUl.appendChild(exampleLi);
+                            });
+                        }
+
+                        if (childSelectedExampleNumbers.length > 0) {
+                            const childTitleLi = document.createElement('li');
+                            childTitleLi.innerHTML = `<em>Childhood examples reported:</em>`;
+                            childTitleLi.style.listStyleType = 'none'; 
+                            examplesContainerUl.appendChild(childTitleLi);
+
+                            const childExampleTexts = getSelectedExampleTexts(childSelectedExampleNumbers, symptom.childExamples);
+                            childExampleTexts.forEach(text => {
+                                const exampleLi = document.createElement('li');
+                                exampleLi.textContent = text;
+                                examplesContainerUl.appendChild(exampleLi);
+                            });
+                        }
+                        
+                        if (examplesContainerUl.hasChildNodes()) {
+                           li.appendChild(examplesContainerUl); 
+                        }
+                    }
+                });
+                symptomsSection.appendChild(ul);
+            });
+            reportContent.appendChild(symptomsSection);
+
+            const criteriaSection = document.createElement('div');
+            criteriaSection.className = 'report-section';
+            const criteriaHeader = document.createElement('h3');
+            criteriaHeader.textContent = 'DSM-5 Diagnostic Criteria Checklist';
+            criteriaSection.appendChild(criteriaHeader);
+            const criteriaUl = document.createElement('ul');
+            criteriaUl.className = 'diagnosis-list';
+
+            const criteriaTextMap = {
+                childhoodOnset: "Symptoms present prior to age 12 AND childhood symptom threshold met.",
+                crossContextualImpairment: "Symptoms present in two or more settings.",
+                significantImpairment: "Symptoms interfere with, or reduce the quality of, social, academic, or occupational functioning.",
+                exclusionaryCriteria: "Symptoms are NOT better explained by another mental disorder."
+            };
+
+            let overallAdhdIndicated = true; 
+
+            const criterionAInattentionMetAdult = scores.inattention.adult >= DIVA5_DATA.diagnosisSummary.inattentionThresholdAdult;
+            const criterionAHyperactivityMetAdult = scores.hyperactivity_impulsivity.adult >= DIVA5_DATA.diagnosisSummary.hyperactivityImpulsivityThresholdAdult;
+            const criterionAMetAdult = criterionAInattentionMetAdult || criterionAHyperactivityMetAdult;
+            
+            const criterionALi = document.createElement('li');
+            criterionALi.textContent = `Criterion A (Adult Symptom Count): At least ${DIVA5_DATA.diagnosisSummary.inattentionThresholdAdult} inattention OR ${DIVA5_DATA.diagnosisSummary.hyperactivityImpulsivityThresholdAdult} hyperactivity/impulsivity symptoms. - Result: ${criterionAMetAdult ? "Met" : "Not Met"}`;
+            if (criterionAMetAdult) criterionALi.classList.add('indicated'); else overallAdhdIndicated = false;
+            criteriaUl.appendChild(criterionALi);
+
+            const childhoodOnsetMetForReport = appState.criteriaResponses['childhoodOnset'] === true && (scores.inattention.child >= DIVA5_DATA.diagnosisSummary.inattentionThresholdChild || scores.hyperactivity_impulsivity.child >= DIVA5_DATA.diagnosisSummary.hyperactivityImpulsivityThresholdChild);
+            const criteriaStatus = {
+                'childhoodOnset': childhoodOnsetMetForReport,
+                'crossContextualImpairment': appState.criteriaResponses['crossContextualImpairment'] === true,
+                'significantImpairment': appState.criteriaResponses['significantImpairment'] === true,
+                'exclusionaryCriteria': appState.criteriaResponses['exclusionaryCriteria'] === false 
+            };
+
+            Object.keys(DIVA5_DATA.criteria).forEach(key => {
+                const li = document.createElement('li');
+                const met = criteriaStatus[key];
+                li.textContent = `${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}: ${criteriaTextMap[key]} - Result: ${met ? "Met" : "Not Met"}`;
+                if (met) li.classList.add('indicated'); else overallAdhdIndicated = false;
+                criteriaUl.appendChild(li);
+            });
+            criteriaSection.appendChild(criteriaUl);
+            reportContent.appendChild(criteriaSection);
+
+            const summarySection = document.createElement('div');
+            summarySection.className = 'report-section';
+            const summaryHeader = document.createElement('h3');
+            summaryHeader.textContent = 'Overall Screener Indication';
+            summarySection.appendChild(summaryHeader);
+            
+            const summaryP = document.createElement('p');
+            summaryP.innerHTML = diagnosisText.split('\n').filter(line => line.startsWith("<strong>Overall Indication:") || line.startsWith("<strong>Potential Presentation (Adult):")).join('<br>');
+            summarySection.appendChild(summaryP);
+
+            const finalDisclaimerP = document.createElement('p');
+            finalDisclaimerP.innerHTML = "<strong>Important:</strong> This screener is not a substitute for a professional diagnosis. If you have concerns about ADHD, please consult with a qualified healthcare provider for a comprehensive evaluation.";
+            summarySection.appendChild(finalDisclaimerP);
+            reportContent.appendChild(summarySection);
+
+            updateProgressBar(); 
+        }
+
+
+        async function downloadReportAsPDF() {
+            const { jsPDF } = window.jspdf;
+            if (!jsPDF) {
+                alert("Error: jsPDF library not loaded. Cannot download PDF.");
+                if (!document.getElementById('jspdf-script')) {
+                    const script = document.createElement('script');
+                    script.id = 'jspdf-script';
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                    script.onload = () => {
+                        console.log("jsPDF loaded dynamically.");
+                    };
+                    document.head.appendChild(script);
+                }
+                return;
+            }
+
+            const reportContentElement = document.getElementById('report-content');
+            const originalBodyClass = document.body.className;
+            const originalReportStyle = reportContentElement.style.cssText;
+
+            reportContentElement.style.maxHeight = 'none';
+            reportContentElement.style.overflowY = 'visible';
+            
+            const pdf = new jsPDF({
+                orientation: 'p',
+                unit: 'pt',
+                format: 'a4'
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfMargin = 20; 
+            const contentWidth = pdfWidth - (pdfMargin * 2);
+
+            pdf.setFontSize(18);
+            pdf.text("DIVA-5 ADHD Screener Report", pdfMargin, pdfMargin + 10);
+            pdf.setFontSize(10);
+            pdf.text(`Generated on: ${new Date().toLocaleDateString()}`, pdfMargin, pdfMargin + 25);
+
+            let currentY = pdfMargin + 40; 
+
+            const sections = reportContentElement.querySelectorAll('.report-section');
+            for (const section of sections) {
+                // Special handling for the "Symptom Checklist Summary" section in the adult version
+                if (section.querySelector('h3')?.textContent === 'Symptom Checklist Summary') {
+                    const sectionTitle = section.querySelector('h3');
+                    if (sectionTitle) {
+                        pdf.setFontSize(14);
+                        pdf.setFont(undefined, 'bold');
+                        currentY = addWrappedText(pdf, sectionTitle.innerText, pdfMargin, currentY + 15, contentWidth, 14);
+                        pdf.setFont(undefined, 'normal');
+                    }
+
+                    const categories = section.querySelectorAll('h4'); // Part 1 and Part 2 titles
+                    const paragraphs = Array.from(section.querySelectorAll('p')); // All score paragraphs
+                    const symptomLists = section.querySelectorAll('ul.diagnosis-list'); // All symptom lists
+
+                    categories.forEach((categoryHeader, index) => {
+                        // Print H4 category title
+                        pdf.setFontSize(12);
+                        pdf.setFont(undefined, 'bold');
+                        currentY = addWrappedText(pdf, categoryHeader.innerText, pdfMargin, currentY + 10, contentWidth, 12);
+                        pdf.setFont(undefined, 'normal');
+
+                        // Print the corresponding two score paragraphs (Adult and Childhood)
+                        // For Adult DIVA-5, there are 2 score <p> tags per category (Adult, Child)
+                        const adultScoreP = paragraphs[index * 2];
+                        const childScoreP = paragraphs[(index * 2) + 1];
+
+                        if (adultScoreP) {
+                            pdf.setFontSize(10);
+                            currentY = addWrappedText(pdf, adultScoreP.innerText, pdfMargin, currentY + 7, contentWidth, 10);
+                        }
+                        if (childScoreP) {
+                            pdf.setFontSize(10);
+                            currentY = addWrappedText(pdf, childScoreP.innerText, pdfMargin, currentY + 7, contentWidth, 10);
+                        }
+
+                        // Print the corresponding symptom list
+                        const symptomListUL = symptomLists[index];
+                        if (symptomListUL) {
+                            Array.from(symptomListUL.children).forEach(mainSymptomLi => {
+                                if (mainSymptomLi.tagName !== 'LI') return;
+                                // ... (Keep the existing detailed logic for mainSymptomLi and its nested examples UL)
+                                let mainLiText = "";
+                                for (let node of mainSymptomLi.childNodes) {
+                                    if (node.nodeType === Node.TEXT_NODE) {
+                                        mainLiText += node.textContent;
+                                    } else if (node.tagName === 'UL') { break; } 
+                                    else { mainLiText += node.textContent; }
+                                }
+                                mainLiText = mainLiText.trim();
+                                let prefix = mainSymptomLi.classList.contains('indicated') ? "[X] " : "[ ] ";
+                                pdf.setFontSize(9);
+                                pdf.setFont(undefined, 'normal'); 
+                                currentY = addWrappedText(pdf, prefix + mainLiText, pdfMargin, currentY + 5, contentWidth, 9);
+                                const examplesUl = mainSymptomLi.querySelector('ul'); 
+                                if (examplesUl) {
+                                    Array.from(examplesUl.children).forEach(exampleLi => {
+                                        if (exampleLi.tagName !== 'LI') return;
+                                        pdf.setFontSize(9); 
+                                        const exampleText = exampleLi.textContent.trim();
+                                        const exampleIndent = pdfMargin + 15; 
+                                        const exampleContentWidth = contentWidth - 15;
+                                        if (exampleLi.style.listStyleType === 'none') { 
+                                             pdf.setFont(undefined, 'italic');
+                                             currentY = addWrappedText(pdf, exampleText, exampleIndent, currentY + 5, exampleContentWidth, 9);
+                                             pdf.setFont(undefined, 'normal');
+                                        } else { 
+                                            currentY = addWrappedText(pdf, "• " + exampleText, exampleIndent, currentY + 5, exampleContentWidth, 9);
+                                        }
+                                    });
+                                }
+                                // End of existing detailed logic
+                            });
+                        }
+                    });
+
+                } else { // For all other sections, use the general child iteration
+                    Array.from(section.children).forEach(childElement => {
+                        if (childElement.tagName === 'H3') {
+                            pdf.setFontSize(14);
+                            pdf.setFont(undefined, 'bold');
+                            currentY = addWrappedText(pdf, childElement.innerText, pdfMargin, currentY + 15, contentWidth, 14);
+                            pdf.setFont(undefined, 'normal');
+                        } else if (childElement.tagName === 'H4') {
+                            pdf.setFontSize(12);
+                            pdf.setFont(undefined, 'bold');
+                            currentY = addWrappedText(pdf, childElement.innerText, pdfMargin, currentY + 10, contentWidth, 12);
+                            pdf.setFont(undefined, 'normal');
+                        } else if (childElement.tagName === 'P') {
+                            pdf.setFontSize(10);
+                            currentY = addWrappedText(pdf, childElement.innerText, pdfMargin, currentY + 7, contentWidth, 10);
+                        } else if (childElement.tagName === 'UL' && childElement.classList.contains('diagnosis-list')) {
+                            Array.from(childElement.children).forEach(mainSymptomLi => {
+                                if (mainSymptomLi.tagName !== 'LI') return;
+                                // ... (Keep the existing detailed logic for mainSymptomLi and its nested examples UL - same as above)
+                                let mainLiText = "";
+                                for (let node of mainSymptomLi.childNodes) {
+                                    if (node.nodeType === Node.TEXT_NODE) {
+                                        mainLiText += node.textContent;
+                                    } else if (node.tagName === 'UL') { break; } 
+                                    else { mainLiText += node.textContent; }
+                                }
+                                mainLiText = mainLiText.trim();
+                                let prefix = mainSymptomLi.classList.contains('indicated') ? "[X] " : "[ ] ";
+                                pdf.setFontSize(9);
+                                pdf.setFont(undefined, 'normal'); 
+                                currentY = addWrappedText(pdf, prefix + mainLiText, pdfMargin, currentY + 5, contentWidth, 9);
+                                const examplesUl = mainSymptomLi.querySelector('ul'); 
+                                if (examplesUl) {
+                                    Array.from(examplesUl.children).forEach(exampleLi => {
+                                        if (exampleLi.tagName !== 'LI') return;
+                                        pdf.setFontSize(9); 
+                                        const exampleText = exampleLi.textContent.trim();
+                                        const exampleIndent = pdfMargin + 15; 
+                                        const exampleContentWidth = contentWidth - 15;
+                                        if (exampleLi.style.listStyleType === 'none') { 
+                                             pdf.setFont(undefined, 'italic');
+                                             currentY = addWrappedText(pdf, exampleText, exampleIndent, currentY + 5, exampleContentWidth, 9);
+                                             pdf.setFont(undefined, 'normal');
+                                        } else { 
+                                            currentY = addWrappedText(pdf, "• " + exampleText, exampleIndent, currentY + 5, exampleContentWidth, 9);
+                                        }
+                                    });
+                                }
+                                // End of existing detailed logic
+                            });
+                        }
+                    });
+                }
+                currentY += 10; // Space after each section
+            }
+            
+            function addWrappedText(doc, text, x, y, maxWidth, fontSize, lineHeightFactor = 1.15) {
+                const lines = doc.splitTextToSize(text, maxWidth);
+                const lineHeight = fontSize * lineHeightFactor;
+                lines.forEach((line, index) => {
+                    if (y + (index * lineHeight) > doc.internal.pageSize.getHeight() - pdfMargin) {
+                        doc.addPage();
+                        y = pdfMargin - (index * lineHeight); 
+                    }
+                    doc.text(line, x, y + (index * lineHeight));
+                });
+                return y + (lines.length * lineHeight);
+            }
+
+            pdf.save('DIVA-5-ADHD-Screener-Report.pdf');
+
+            document.body.className = originalBodyClass;
+            reportContentElement.style.cssText = originalReportStyle;
+        }
+
+        (function loadJsPdf() {
+            if (!document.getElementById('jspdf-script')) {
+                const script = document.createElement('script');
+                script.id = 'jspdf-script';
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                script.async = true;
+                script.onload = () => {
+                    console.log("jsPDF library loaded.");
+                };
+                script.onerror = () => console.error("Failed to load jsPDF library.");
+                document.head.appendChild(script);
+            }
+        })();
+
+        document.addEventListener('DOMContentLoaded', initializeScreener);
+
+    </script>
+</body>
+</html>

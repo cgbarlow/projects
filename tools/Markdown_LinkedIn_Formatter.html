@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown to LinkedIn Formatter</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5; /* LinkedIn-ish background */
+            color: #1c1e21;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #0a66c2; /* LinkedIn Blue */
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 1px solid #ccd0d5;
+            border-radius: 6px;
+            font-size: 1em;
+            line-height: 1.5;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            resize: vertical;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; /* Monospace for markdown input */
+        }
+
+        #output {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* System font for output */
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #0a66c2; /* LinkedIn Blue */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        button:hover {
+            background-color: #004182; /* Darker LinkedIn Blue */
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #606770;
+        }
+        .footer a {
+            color: #0a66c2;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .warning {
+            font-size: 0.85em;
+            color: #777;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fffbe6;
+            border: 1px solid #ffe58f;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Markdown to LinkedIn Formatter</h1>
+
+        <label for="markdownInput" class="label">Enter Markdown Text:</label>
+        <textarea id="markdownInput" placeholder="**Bold text**, *italic text*, `code`..."></textarea>
+
+        <label for="output" class="label">LinkedIn Formatted Text:</label>
+        <textarea id="output" readonly placeholder="Formatted text will appear here..."></textarea>
+
+        <button id="copyButton">Copy to Clipboard</button>
+
+        <div class="warning">
+            <strong>Note:</strong> While Unicode characters create visual styles, they may not be fully accessible to screen readers. Use them thoughtfully.
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>A simple tool for LinkedIn post formatting.</p>
+        <p>Discover more widgets at <a href="https://cgee.nz/widgets" target="_blank" rel="noopener noreferrer">Chris Barlow's Widget Workshop!</a></p>
+    </div>
+
+    <script>
+        const markdownInput = document.getElementById('markdownInput');
+        const outputTextarea = document.getElementById('output');
+        const copyButton = document.getElementById('copyButton');
+
+        const unicodeMaps = {
+            sansBold: {
+                'A':'𝗔', 'B':'𝗕', 'C':'𝗖', 'D':'𝗗', 'E':'𝗘', 'F':'𝗙', 'G':'𝗚', 'H':'𝗛', 'I':'𝗜', 'J':'𝗝', 'K':'𝗞', 'L':'𝗟', 'M':'𝗠', 'N':'𝗡', 'O':'𝗢', 'P':'𝗣', 'Q':'𝗤', 'R':'𝗥', 'S':'𝗦', 'T':'𝗧', 'U':'𝗨', 'V':'𝗩', 'W':'𝗪', 'X':'𝗫', 'Y':'𝗬', 'Z':'𝗭',
+                'a':'𝗮', 'b':'𝗯', 'c':'𝗰', 'd':'𝗱', 'e':'𝗲', 'f':'𝗳', 'g':'𝗴', 'h':'𝗵', 'i':'𝗶', 'j':'𝗷', 'k':'𝗸', 'l':'𝗹', 'm':'𝗺', 'n':'𝗻', 'o':'𝗼', 'p':'𝗽', 'q':'𝗾', 'r':'𝗿', 's':'𝘀', 't':'𝘁', 'u':'𝘂', 'v':'𝘃', 'w':'𝘄', 'x':'𝘅', 'y':'𝘆', 'z':'𝘇',
+                '0':'𝟬', '1':'𝟭', '2':'𝟮', '3':'𝟯', '4':'𝟰', '5':'𝟱', '6':'𝟲', '7':'𝟳', '8':'𝟴', '9':'𝟵'
+            },
+            sansItalic: {
+                'A':'𝘈', 'B':'𝘉', 'C':'𝘊', 'D':'𝘋', 'E':'𝘌', 'F':'𝘍', 'G':'𝘎', 'H':'𝘏', 'I':'𝘐', 'J':'𝘑', 'K':'𝘒', 'L':'𝘓', 'M':'𝘔', 'N':'𝘕', 'O':'𝘖', 'P':'𝘗', 'Q':'𝘘', 'R':'𝘙', 'S':'𝘚', 'T':'𝘛', 'U':'𝘜', 'V':'𝘝', 'W':'𝘞', 'X':'𝘟', 'Y':'𝘠', 'Z':'𝘡',
+                'a':'𝘢', 'b':'𝘣', 'c':'𝘤', 'd':'𝘥', 'e':'𝘦', 'f':'𝘧', 'g':'𝘨', 'h':'𝘩', 'i':'𝘪', 'j':'𝘫', 'k':'𝘬', 'l':'𝘭', 'm':'𝘮', 'n':'𝘯', 'o':'𝘰', 'p':'𝘱', 'q':'𝘲', 'r':'𝘳', 's':'𝘴', 't':'𝘵', 'u':'𝘶', 'v':'𝘷', 'w':'𝘸', 'x':'𝘹', 'y':'𝘺', 'z':'𝘻'
+                // Numbers typically don't have a common sans-italic unicode variant that works universally
+            },
+            sansBoldItalic: {
+                'A':'𝘼', 'B':'𝘽', 'C':'𝘾', 'D':'𝘿', 'E':'𝙀', 'F':'𝙁', 'G':'𝙂', 'H':'𝙃', 'I':'𝙄', 'J':'𝙅', 'K':'𝙆', 'L':'𝙇', 'M':'𝙈', 'N':'𝙉', 'O':'𝙊', 'P':'𝙋', 'Q':'𝙌', 'R':'𝙍', 'S':'𝙎', 'T':'𝙏', 'U':'𝙐', 'V':'𝙑', 'W':'𝙒', 'X':'𝙓', 'Y':'𝙔', 'Z':'𝙕',
+                'a':'𝙖', 'b':'𝙗', 'c':'𝙘', 'd':'𝙙', 'e':'𝙚', 'f':'𝙛', 'g':'𝙜', 'h':'𝙝', 'i':'𝙞', 'j':'𝙟', 'k':'𝙠', 'l':'𝙡', 'm':'𝙢', 'n':'𝙣', 'o':'𝙤', 'p':'𝙥', 'q':'𝙦', 'r':'𝙧', 's':'𝙨', 't':'𝙩', 'u':'𝙪', 'v':'𝙫', 'w':'𝙬', 'x':'𝙭', 'y':'𝙮', 'z':'𝙯'
+                 // Numbers typically don't have a common sans-bold-italic unicode variant
+            },
+            monospace: {
+                'A':'𝙰', 'B':'𝙱', 'C':'𝙲', 'D':'𝙳', 'E':'𝙴', 'F':'𝙵', 'G':'𝙶', 'H':'𝙷', 'I':'𝙸', 'J':'𝙹', 'K':'𝙺', 'L':'𝙻', 'M':'𝙼', 'N':'𝙽', 'O':'𝙾', 'P':'𝙿', 'Q':'𝚀', 'R':'𝚁', 'S':'𝚂', 'T':'𝚃', 'U':'𝚄', 'V':'𝚅', 'W':'𝚆', 'X':'𝚇', 'Y':'𝚈', 'Z':'𝚉',
+                'a':'𝚊', 'b':'𝚋', 'c':'𝚌', 'd':'𝚍', 'e':'𝚎', 'f':'𝚏', 'g':'𝚐', 'h':'𝚑', 'i':'𝚒', 'j':'𝚓', 'k':'𝚔', 'l':'𝚕', 'm':'𝚖', 'n':'𝚗', 'o':'𝚘', 'p':'𝚙', 'q':'𝚚', 'r':'𝚛', 's':'𝚜', 't':'𝚝', 'u':'𝚞', 'v':'𝚟', 'w':'𝚠', 'x':'𝚡', 'y':'𝚢', 'z':'𝚣',
+                '0':'𝟶', '1':'𝟷', '2':'𝟸', '3':'𝟹', '4':'𝟺', '5':'𝟻', '6':'𝟼', '7':'𝟽', '8':'𝟾', '9':'𝟿'
+            }
+        };
+
+        function applyCharStyle(text, styleMap) {
+            return text.split('').map(char => styleMap[char] || char).join('');
+        }
+
+        function markdownToLinkedIn(md) {
+            let text = md;
+
+            // Process multi-level styles first (bold-italic)
+            // ***bolditalic*** or ___bolditalic___
+            text = text.replace(/\*{3}(.*?)\*{3}/g, (match, p1) => applyCharStyle(p1, unicodeMaps.sansBoldItalic));
+            text = text.replace(/_{3}(.*?)_{3}/g, (match, p1) => applyCharStyle(p1, unicodeMaps.sansBoldItalic));
+
+            // **bold** or __bold__
+            text = text.replace(/\*{2}(.*?)\*{2}/g, (match, p1) => applyCharStyle(p1, unicodeMaps.sansBold));
+            text = text.replace(/_{2}(.*?)_{2}/g, (match, p1) => applyCharStyle(p1, unicodeMaps.sansBold));
+
+            // *italic* or _italic_
+            text = text.replace(/\*(.*?)\*/g, (match, p1) => applyCharStyle(p1, unicodeMaps.sansItalic));
+            text = text.replace(/_(.*?)_/g, (match, p1) => applyCharStyle(p1, unicodeMaps.sansItalic));
+
+            // ~~strikethrough~~
+            text = text.replace(/~~(.*?)~~/g, (match, p1) => p1.split('').map(char => char + '\u0336').join(''));
+
+            // `inline code`
+            text = text.replace(/`(.*?)`/g, (match, p1) => applyCharStyle(p1, unicodeMaps.monospace));
+
+            // Headings (#, ##, ### etc.) to bold
+            text = text.replace(/^#{1,6}\s+(.*)/gm, (match, p1) => applyCharStyle(p1, unicodeMaps.sansBold));
+            
+            // Blockquotes (> quote)
+            text = text.replace(/^>\s+(.*)/gm, (match, p1) => '▎ ' + p1);
+
+            // Unordered lists (* item, - item)
+            text = text.replace(/^[\*\-]\s+(.*)/gm, (match, p1) => '• ' + p1);
+            
+            // Ordered lists (1. item) - bold the number
+            text = text.replace(/^(\d+\.)\s+(.*)/gm, (match, p1, p2) => applyCharStyle(p1, unicodeMaps.sansBold) + ' ' + p2);
+
+            // Links [text](url) to text (url)
+            text = text.replace(/\[(.*?)\]\((.*?)\)/g, (match, p1, p2) => `${p1} (${p2})`);
+
+            return text;
+        }
+
+        markdownInput.addEventListener('input', () => {
+            const mdText = markdownInput.value;
+            outputTextarea.value = markdownToLinkedIn(mdText);
+        });
+
+        copyButton.addEventListener('click', () => {
+            outputTextarea.select();
+            outputTextarea.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                navigator.clipboard.writeText(outputTextarea.value).then(() => {
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = 'Copied!';
+                    copyButton.style.backgroundColor = '#28a745'; // Green for success
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                        copyButton.style.backgroundColor = '#0a66c2'; // Revert to original blue
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy text. Please try manually.');
+                });
+            } catch (err) {
+                // Fallback for older browsers (less common now)
+                console.warn('navigator.clipboard not available, trying execCommand.');
+                try {
+                    document.execCommand('copy');
+                    const originalText = copyButton.textContent;
+                    copyButton.textContent = 'Copied!';
+                    copyButton.style.backgroundColor = '#28a745';
+                    setTimeout(() => {
+                        copyButton.textContent = originalText;
+                        copyButton.style.backgroundColor = '#0a66c2';
+                    }, 2000);
+                } catch (e) {
+                    console.error('Failed to copy text with execCommand: ', e);
+                    alert('Failed to copy text. Please try manually.');
+                }
+            }
+        });
+
+        // Initial conversion if there's pre-filled text (e.g. from browser cache)
+        if (markdownInput.value) {
+            outputTextarea.value = markdownToLinkedIn(markdownInput.value);
+        }
+    </script>
+</body>
+</html>

@@ -23,10 +23,13 @@
 | [Squeeze Out Simulator](https://squeezeoutsim.netlify.app/) | Visual simulation of wealth concentration and its effects | 2025-04-12 |
 
 ### Tools
-| Repo | Description | Last Updated |
+| Tool | Description | Last Updated |
 |------|-------------|--------------|
 | [di-test](https://github.com/cgbarlow/di-test) | WCAG accessibility testing tool | 2026-02-24 |
 | [machine-dream_AG](https://github.com/cgbarlow/machine-dream_AG) | Continuous machine cognition research (GRASP loop, dreaming) | 2026-01-28 |
+| [Markdown LinkedIn Formatter](https://chrisbarlow.nz/projects/tools/Markdown_LinkedIn_Formatter.html) | Converts markdown to LinkedIn-friendly formatted text | |
+| [DIVA-5 ADHD Screener](https://chrisbarlow.nz/projects/tools/ADHD_screener_diva5.html) | Interactive ADHD screening tool based on the DIVA-5 diagnostic interview for adults | |
+| [Young DIVA-5 ADHD Screener](https://chrisbarlow.nz/projects/tools/ADHD_screener_young-diva5.html) | Interactive ADHD screening tool based on the Young DIVA-5 for ages 5-17 | |
 
 ### Standards and Guidance
 | Repo | Description | Last Updated |
