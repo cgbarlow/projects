@@ -14,6 +14,14 @@
 | [guild-hall](https://github.com/cgbarlow/guild-hall) | Quest-based community engagement platform | 2026-02-19 |
 | [Architects_of_the_digital_realm](https://github.com/cgbarlow/Architects_of_the_digital_realm) | Text-based adventure game (MTG/D&D) | 2025-08-14 |
 
+### Demos
+| Demo | Description |
+|------|-------------|
+| [Matariki Navigator](https://matarikinav.netlify.app/) | Interactive guide to discovering the stars of the Matariki constellation and their significance in Maori tradition |
+| [Squeeze Out Simulator](https://squeezeoutsim.netlify.app/) | Visual simulation of wealth concentration and its effects |
+| [Matter.js Teddy](https://matterjs-teddy.netlify.app/) | Soft-body physics teddy bear with interactive gravity and mouse controls |
+| [SASI@home](https://sasi-at-home.netlify.app/) | Search for Artificial Super Intelligence distributed computing demo |
+
 ### Tools
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
@@ -31,9 +39,3 @@
 | [doview-skill](https://github.com/cgbarlow/doview-skill) | Claude skill for DoView theory-of-change diagrams | 2026-02-05 |
 | [customgpts](https://github.com/cgbarlow/customgpts) | Home for Custom GPT efforts | 2025-05-14 |
 | [Change-Management-Assistant](https://github.com/cgbarlow/Change-Management-Assistant) | *(no description)* | 2024-02-13 |
-
-### Other Apps
-| Repo | Description | Last Updated |
-|------|-------------|--------------|
-| [familyhistory](https://github.com/cgbarlow/familyhistory) | *(no description)* | 2025-05-21 |
-| [kingdom-squeeze-out](https://github.com/cgbarlow/kingdom-squeeze-out) | *(no description)* | 2025-07-17 |
