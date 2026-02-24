@@ -15,12 +15,12 @@
 | [Architects_of_the_digital_realm](https://github.com/cgbarlow/Architects_of_the_digital_realm) | Text-based adventure game (MTG/D&D) | 2025-08-14 |
 
 ### Demos
-| Demo | Description |
-|------|-------------|
-| [Matariki Navigator](https://matarikinav.netlify.app/) | Interactive guide to discovering the stars of the Matariki constellation and their significance in Maori tradition |
-| [Squeeze Out Simulator](https://squeezeoutsim.netlify.app/) | Visual simulation of wealth concentration and its effects |
-| [Matter.js Teddy](https://matterjs-teddy.netlify.app/) | Soft-body physics teddy bear with interactive gravity and mouse controls |
-| [SASI@home](https://sasi-at-home.netlify.app/) | Search for Artificial Super Intelligence distributed computing demo |
+| Demo | Description | Last Published |
+|------|-------------|----------------|
+| [Matter.js Teddy](https://matterjs-teddy.netlify.app/) | Soft-body physics teddy bear with interactive gravity and mouse controls | 2025-07-24 |
+| [SASI@home](https://sasi-at-home.netlify.app/) | Search for Artificial Super Intelligence distributed computing demo | 2025-07-22 |
+| [Matariki Navigator](https://matarikinav.netlify.app/) | Interactive guide to discovering the stars of the Matariki constellation and their significance in Maori tradition | 2025-06-27 |
+| [Squeeze Out Simulator](https://squeezeoutsim.netlify.app/) | Visual simulation of wealth concentration and its effects | 2025-04-12 |
 
 ### Tools
 | Repo | Description | Last Updated |
@@ -28,10 +28,10 @@
 | [di-test](https://github.com/cgbarlow/di-test) | WCAG accessibility testing tool | 2026-02-24 |
 | [machine-dream_AG](https://github.com/cgbarlow/machine-dream_AG) | Continuous machine cognition research (GRASP loop, dreaming) | 2026-01-28 |
 
-### Methods
+### Standards and Guidance
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
-| [adr](https://github.com/cgbarlow/adr) | Enhanced ADR format proposal for Claude-Flow v3 | 2026-01-20 |
+| [adr](https://github.com/cgbarlow/adr) | Enhanced ADR format proposal using the WH(Y) method | 2026-02-24 |
 
 ### Miscellaneous Agents and Skills
 | Repo | Description | Last Updated |
