@@ -38,4 +38,3 @@
 |------|-------------|--------------|
 | [doview-skill](https://github.com/cgbarlow/doview-skill) | Claude skill for DoView theory-of-change diagrams | 2026-02-05 |
 | [customgpts](https://github.com/cgbarlow/customgpts) | Home for Custom GPT efforts | 2025-05-14 |
-| [Change-Management-Assistant](https://github.com/cgbarlow/Change-Management-Assistant) | *(no description)* | 2024-02-13 |
