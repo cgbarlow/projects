@@ -33,8 +33,9 @@
 |------|-------------|--------------|
 | [adr](https://github.com/cgbarlow/adr) | Enhanced ADR format proposal using the WH(Y) method | 2026-02-24 |
 
-### Miscellaneous Agents and Skills
+### Agents and Skills
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
+| [skills](https://github.com/cgbarlow/skills)| Simple repo containing claude skills I have created. Drop these into your .claude/skills directory | 2025-12-17 |
 | [doview-skill](https://github.com/cgbarlow/doview-skill) | Claude skill for DoView theory-of-change diagrams | 2026-02-05 |
 | [customgpts](https://github.com/cgbarlow/customgpts) | Home for Custom GPT efforts | 2025-05-14 |
