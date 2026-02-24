@@ -16,6 +16,10 @@ social:
     - https://github.com/cgbarlow
     - https://unchartedquests.substack.com/
 
+markdown: kramdown
+kramdown:
+  input: GFM
+
 plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
