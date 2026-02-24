@@ -43,7 +43,7 @@ description: A catalogue of projects by Chris Barlow.
 
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
-| [adr](https://github.com/cgbarlow/adr) | Enhanced ADR format proposal using the WH(Y) method | 2026-02-24 |
+| [adr](https://github.com/cgbarlow/adr) | Enhanced Architecture Decision Record (ADR) format proposal using the WH(Y) method | 2026-02-24 |
 
 ### Agents and Skills
 
