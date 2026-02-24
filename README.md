@@ -31,14 +31,14 @@
 | [DIVA-5 ADHD Screener](https://chrisbarlow.nz/projects/tools/ADHD_screener_diva5.html) | Interactive ADHD screening tool based on the DIVA-5 diagnostic interview for adults | 2025-05-24 |
 | [Young DIVA-5 ADHD Screener](https://chrisbarlow.nz/projects/tools/ADHD_screener_young-diva5.html) | Interactive ADHD screening tool based on the Young DIVA-5 for ages 5-17 | 2025-05-24 |
 
-### Standards and Guidance
-| Repo | Description | Last Updated |
-|------|-------------|--------------|
-| [adr](https://github.com/cgbarlow/adr) | Enhanced Architecture Decision Record (ADR) format proposal using the WH(Y) method | 2026-02-24 |
-
 ### Agents and Skills
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
 | [skills](https://github.com/cgbarlow/skills)| Simple repo containing claude skills I have created. Drop these into your .claude/skills directory | 2025-12-17 |
 | [doview-skill](https://github.com/cgbarlow/doview-skill) | Claude skills for DoView theory-of-change diagrams | 2026-02-05 |
 | [customgpts](https://github.com/cgbarlow/customgpts) | Home for Custom GPT efforts | 2025-05-14 |
+
+### Standards and Guidance
+| Repo | Description | Last Updated |
+|------|-------------|--------------|
+| [adr](https://github.com/cgbarlow/adr) | Enhanced Architecture Decision Record (ADR) format proposal using the WH(Y) method | 2026-02-24 |
