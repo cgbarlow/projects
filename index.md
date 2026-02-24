@@ -1,4 +1,5 @@
 ---
+layout: default
 title: All Projects
 description: A catalogue of projects by Chris Barlow.
 ---
