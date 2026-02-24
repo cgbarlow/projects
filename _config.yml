@@ -19,6 +19,9 @@ social:
 markdown: kramdown
 kramdown:
   input: GFM
+  typographic_symbols:
+    mdash: "---"
+    ndash: "--"
 
 plugins:
   - jekyll-remote-theme
