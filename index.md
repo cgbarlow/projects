@@ -4,8 +4,6 @@ title: All Projects
 description: A catalogue of projects by Chris Barlow.
 ---
 
-[Return home](https://chrisbarlow.nz)
-
 ### Vision
 
 | Repo | Description | Last Updated |

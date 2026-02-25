@@ -1,5 +1,3 @@
-[Return home](https://chrisbarlow.nz)
-
 # Projects
 
 ### Vision
