@@ -24,7 +24,7 @@
 | Tool | Description | Last Updated |
 |------|-------------|--------------|
 | [iris](https://github.com/cgbarlow/iris) | A repository-first architectural modelling tool for creating and managing architectural elements, relationships, and models. It supports several notations including UML, ArchiMate, and C4 and full conversion from SparxEA. | 2026-03-10 |
-| [di-test](https://chrisbarlow.nz/di-test) | WCAG accessibility testing tool | 2026-03-07 |
+| [di-test](https://chrisbarlow.nz/di-test) | Accessibility testing tool that finds WCAG violations and catches patterns automated tools miss — like text that looks like a heading but isn't marked up as one. Install as a Claude Code plugin and scan any URL. | 2026-03-07 |
 | [machine-dream_AG](https://github.com/cgbarlow/machine-dream_AG) | Continuous machine cognition research (GRASP loop, dreaming) | 2026-01-28 |
 | [Markdown LinkedIn Formatter](https://chrisbarlow.nz/projects/tools/Markdown_LinkedIn_Formatter.html) | Converts markdown to LinkedIn-friendly formatted text | 2025-05-24 |
 | [DIVA-5 ADHD Screener](https://chrisbarlow.nz/projects/tools/ADHD_screener_diva5.html) | Interactive ADHD screening tool based on the DIVA-5 diagnostic interview for adults | 2025-05-24 |
