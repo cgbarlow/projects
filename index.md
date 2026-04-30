@@ -18,6 +18,12 @@ description: A catalogue of projects by Chris Barlow.
 | [guild-hall](https://github.com/cgbarlow/guild-hall) | Quest-based community engagement platform | 2026-02-19 |
 | [Architects_of_the_digital_realm](https://github.com/cgbarlow/Architects_of_the_digital_realm) | Text-based adventure game (MTG/D&D) | 2025-08-14 |
 
+### Community
+
+| Repo | Description | Last Updated |
+|------|-------------|--------------|
+| [Agentics NZ Showcase](https://github.com/agenticsnz/showcase) | Curated collection of AI agent projects spanning featured applications, educational frameworks, and development tools | 2026-04-30 |
+
 ### Demos
 
 | Demo | Description | Last Published |
