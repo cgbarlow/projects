@@ -22,6 +22,7 @@ description: A catalogue of projects by Chris Barlow.
 
 | Demo | Description | Last Published |
 |------|-------------|----------------|
+| [Agentics NZ Showcase](https://github.com/agenticsnz/showcase) | Curated collection of AI agent projects spanning featured applications, educational frameworks, and development tools | 2026-04-30 |
 | [Lander](https://github.com/cgbarlow/lander) | Browser-based JavaScript recreation of the 1987 Acorn Archimedes game "Lander", with procedurally generated 3D terrain ported from the original ARM source | 2026-04-30 |
 | [slopgasm](https://chrisbarlow.nz/slopgasm/) | AI-generated music, graphics and code slopped out during a 15-minute train commute (Suno + Nano Banana + Claude) | 2026-04-30 |
 | [Matter.js Teddy](https://matterjs-teddy.netlify.app/) | Soft-body physics teddy bear with interactive gravity and mouse controls | 2025-07-24 |
