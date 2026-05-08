@@ -51,6 +51,7 @@ description: A catalogue of projects by Chris Barlow.
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
 | [adr](https://github.com/cgbarlow/adr) | Enhanced Architecture Decision Record (ADR) format proposal using the WH(Y) method | 2026-02-24 |
+| [protocols](https://github.com/cgbarlow/protocols) | Engineering protocols for Claude Code /plan mode workflows — TDD, ADRs, specs, feature branches, and more | 2026-05-08 |
 
 ### Agents and Skills
 
