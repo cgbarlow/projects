@@ -5,6 +5,11 @@
 |------|-------------|--------------|
 | [AI-Blueprint-for-New-Zealand](https://github.com/cgbarlow/AI-Blueprint-for-New-Zealand) | Crowd-sourcing an AI Blueprint for NZ | 2026-02-19 |
 
+### Community
+| Repo | Description | Last Updated |
+|------|-------------|--------------|
+| [Agentics NZ Showcase](https://github.com/agenticsnz/showcase) | Curated collection of AI agent projects spanning featured applications, educational frameworks, and development tools | 2026-04-30 |
+
 ### Quest Based Experiences
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
@@ -15,6 +20,8 @@
 ### Demos
 | Demo | Description | Last Published |
 |------|-------------|----------------|
+| [Lander](https://github.com/cgbarlow/lander) | Browser-based JavaScript recreation of the 1987 Acorn Archimedes game "Lander", with procedurally generated 3D terrain ported from the original ARM source | 2026-04-30 |
+| [slopgasm](https://chrisbarlow.nz/slopgasm/) | AI-generated music, graphics and code slopped out during a 15-minute train commute (Suno + Nano Banana + Claude) | 2026-04-30 |
 | [Matter.js Teddy](https://matterjs-teddy.netlify.app/) | Soft-body physics teddy bear with interactive gravity and mouse controls | 2025-07-24 |
 | [SASI@home](https://sasi-at-home.netlify.app/) | Search for Artificial Super Intelligence distributed computing demo | 2025-07-22 |
 | [Matariki Navigator](https://matarikinav.netlify.app/) | Interactive guide to discovering the stars of the Matariki constellation and their significance in Maori tradition | 2025-06-27 |
@@ -30,16 +37,15 @@
 | [DIVA-5 ADHD Screener](https://chrisbarlow.nz/projects/tools/ADHD_screener_diva5.html) | Interactive ADHD screening tool based on the DIVA-5 diagnostic interview for adults | 2025-05-24 |
 | [Young DIVA-5 ADHD Screener](https://chrisbarlow.nz/projects/tools/ADHD_screener_young-diva5.html) | Interactive ADHD screening tool based on the Young DIVA-5 for ages 5-17 | 2025-05-24 |
 
-### Agents and Skills
-| Repo | Description | Last Updated |
-|------|-------------|--------------|
-| [skills](https://github.com/cgbarlow/skills)| Simple repo containing claude skills I have created. Drop these into your .claude/skills directory | 2026-03-12 |
-| [doview-skill](https://github.com/cgbarlow/doview-skill) | Claude skills for DoView theory-of-change diagrams | 2026-02-05 |
-| [customgpts](https://github.com/cgbarlow/customgpts) | Home for Custom GPT efforts | 2025-05-14 |
-
 ### Standards and Guidance
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
 | [adr](https://github.com/cgbarlow/adr) | Enhanced Architecture Decision Record (ADR) format proposal using the WH(Y) method | 2026-02-24 |
+| [protocols](https://github.com/cgbarlow/protocols) | Engineering protocols for Claude Code /plan mode workflows — TDD, ADRs, specs, feature branches, and more | 2026-05-08 |
 
-Test
+### Agents and Skills
+| Repo | Description | Last Updated |
+|------|-------------|--------------|
+| [skills](https://github.com/cgbarlow/skills) | Simple repo containing claude skills I have created. Drop these into your .claude/skills directory | 2026-02-27 |
+| [doview-skill](https://github.com/cgbarlow/doview-skill) | Claude skills for DoView theory-of-change diagrams | 2026-02-05 |
+| [customgpts](https://github.com/cgbarlow/customgpts) | Home for Custom GPT efforts | 2025-05-14 |
