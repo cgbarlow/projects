@@ -15,6 +15,7 @@ description: A catalogue of projects by Chris Barlow.
 | Repo | Description | Last Updated |
 |------|-------------|--------------|
 | [Agentics NZ Showcase](https://github.com/agenticsnz/showcase) | Curated collection of AI agent projects spanning featured applications, educational frameworks, and development tools | 2026-04-30 |
+| [unsorry](https://github.com/agenticsnz/unsorry) | Autonomous agents proving theorems in Lean 4 — SETI@Home but for maths proofs using LLMs. Git is the queue, the kernel is the gate, no sorry survives. | 2026-06-20 |
 
 ### Quest Based Experiences
 
