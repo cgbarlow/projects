@@ -31,6 +31,7 @@
 ### Tools
 | Tool | Description | Last Updated |
 |------|-------------|--------------|
+| [gantry](https://github.com/cgbarlow/gantry) | Repo-driven pipeline for staged, gated processes. Capture the data once; render whatever document the gate asks for. | 2026-09-16 |
 | [iris](https://github.com/cgbarlow/iris) | A repository-first architectural modelling tool for creating and managing architectural elements, relationships, and models. It supports several notations including UML, ArchiMate, and C4 and full conversion from SparxEA. | 2026-03-10 |
 | [di-test](https://chrisbarlow.nz/di-test) | Accessibility testing tool that finds WCAG violations and catches patterns automated tools miss — like text that looks like a heading but isn't marked up as one. Install as a Claude Code plugin and scan any URL. | 2026-03-07 |
 | [machine-dream_AG](https://github.com/cgbarlow/machine-dream_AG) | Continuous machine cognition research platform with GRASP loop, dreaming consolidation, and persistent memory. | 2026-01-28 |
